@@ -1,0 +1,66 @@
+<% layout('layouts/boilerplate') %>
+
+<body>
+    <section class="bg-dark text-white text-center py-5">
+    <h1>Explore Restaurants</h1>
+    <p>Discover the best places to eat near you</p>
+</section>
+
+<!-- ✅ Main Content -->
+<div class="container my-5">
+    <div class="row">
+
+        <!-- 🔍 Filter Sidebar -->
+        <div class="col-md-3">
+            <div class="filter-box">
+                <h5>Filter By</h5>
+                <hr>
+
+                <label class="form-label">Category</label>
+                <select class="form-select mb-3">
+                    <option>All</option>
+                    <option>Pizza</option>
+                    <option>Cafe</option>
+                    <option>Indian</option>
+                    <option>Chinese</option>
+                </select>
+
+                <label class="form-label">Rating</label>
+                <select class="form-select mb-3">
+                    <option>All</option>
+                    <option>4+ Stars</option>
+                    <option>3+ Stars</option>
+                </select>
+
+                <button class="btn btn-warning w-100">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- 🍴 Restaurant Cards -->
+        <div class="col-md-9">
+            <div class="row">
+
+                <% for( let resturant of resturants) { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card restaurant-card shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1555992336-03a23c9b6c9c" class="card-img-top" height="200">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= resturant.name %></h5>
+                            <p class="card-text"><%= resturant.location %> • ⭐ 4.5</p>
+                            <a href="/show/<%= resturant._id %>" class="btn btn-warning w-100">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                
+
+                
+
+                <!-- Add more cards similarly -->
+
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>

@@ -1,29 +1,49 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-  <div class="container-fluid">
-    
-    <a class="navbar-brand" href="#">FoodieHub</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-3">
+  <div class="container">
 
-    <form class="d-flex mx-auto" role="search" style="width: 40%;">
-      <input class="form-control me-2" type="search" placeholder="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
+    <!-- Logo -->
+    <a class="navbar-brand fw-bold fs-4" href="/">
+      🍽 FoodieHub
+    </a>
 
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row gap-3">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Restaurants</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Offers & Deals</a>
-      </li>
-    </ul>
+    <!-- Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <!-- <form class="d-flex mx-auto" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form> -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
 
+      <!-- Center Links -->
+      <ul class="navbar-nav mx-auto gap-4">
+        <li class="nav-item">
+          <a class="nav-link active fw-semibold" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" href="/resturants">Restaurants</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" href="#">Offers</a>
+        </li>
+      </ul>
+
+      <!-- Search Bar -->
+      <form class="d-flex me-4" role="search" style="width: 250px;">
+        <input class="form-control rounded-pill me-2" type="search" placeholder="Search...">
+        <button class="btn btn-warning rounded-pill px-3" type="submit">
+          Search
+        </button>
+      </form>
+
+      <!-- Auth Buttons -->
+      <div class="d-flex gap-2">
+        <a href="#" class="btn btn-outline-light rounded-pill px-3">
+          Login
+        </a>
+        <a href="#" class="btn btn-warning rounded-pill px-3">
+          Sign Up
+        </a>
+      </div>
+
+    </div>
   </div>
 </nav>
