@@ -15,24 +15,28 @@
             <div class="filter-box">
                 <h5>Filter By</h5>
                 <hr>
-
+            <form action="/filter" method="get">
                 <label class="form-label">Category</label>
-                <select class="form-select mb-3">
+                <select name="Category" class="form-select mb-3">
+                    <!-- 'North Indian', 'South Indian', 'Chinese', 'Fast Food', 'Desserts', 'Beverages' -->
                     <option>All</option>
-                    <option>Pizza</option>
-                    <option>Cafe</option>
-                    <option>Indian</option>
-                    <option>Chinese</option>
+                    <option <%= category === "North Indian" ? "selected" : "" %>>North Indian</option>
+                    <option <%= category === "South Indian" ? "selected" : "" %>>South Indian</option>
+                    <option <%= category === "Chinese" ? "selected" : "" %>>Chinese</option>
+                    <option <%= category === "Fast Food" ? "selected" : "" %>>Fast Food</option>
+                    <option <%= category === "Desserts" ? "selected" : "" %>>Desserts</option>
+                    <option <%= category === "Beverages" ? "selected" : "" %>>Beverages</option>
                 </select>
 
                 <label class="form-label">Rating</label>
-                <select class="form-select mb-3">
+                <select name="rating" class="form-select mb-3">
                     <option>All</option>
                     <option>4+ Stars</option>
                     <option>3+ Stars</option>
                 </select>
 
                 <button class="btn btn-warning w-100">Apply Filters</button>
+                </form>
             </div>
         </div>
 
@@ -47,6 +51,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><%= resturant.name %></h5>
                             <p class="card-text"><%= resturant.location %> • ⭐ 4.5</p>
+                            <p class="card-text">Category: <%= resturant.Category %></p>
                             <a href="/show/<%= resturant._id %>" class="btn btn-warning w-100">View Details</a>
                         </div>
                     </div>

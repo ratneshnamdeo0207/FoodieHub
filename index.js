@@ -40,7 +40,8 @@ app.get("/", (req, res)=>{
 app.get("/resturants", async (req, res)=>{
     let resturants = await Resturant.find({});
     console.log(resturants)
-    res.render("resturants.ejs", {resturants})
+    category = "all"
+    res.render("resturants.ejs", {resturants, category})
 })
 
 app.get("/show/:id", async (req, res)=>{
@@ -49,6 +50,25 @@ app.get("/show/:id", async (req, res)=>{
     let rest = await Resturant.findById(id)
     console.log(rest)
     res.render("show.ejs",  { rest})
+})
+
+app.get("/filter", async (req, res)=>{
+    category = req.query.Category
+    rating = req.query.rating
+    let resturants = await Resturant.find({Category: category});
+    console.log(resturants)
+    
+    res.render("resturants.ejs", {resturants, category, rating})
+
+})
+
+app.get("/search", async (req, res)=>{
+    let location = req.query.location;  
+  let resturants = await Resturant.find({location: location});
+    console.log(resturants)
+    
+    res.render("search.ejs", {location , resturants})
+    
 })
 
 
