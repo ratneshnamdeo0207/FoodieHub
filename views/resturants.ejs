@@ -50,7 +50,25 @@
                         <img src="https://images.unsplash.com/photo-1555992336-03a23c9b6c9c" class="card-img-top" height="200">
                         <div class="card-body">
                             <h5 class="card-title"><%= resturant.name %></h5>
-                            <p class="card-text"><%= resturant.location %> • ⭐ 4.5</p>
+
+                            <% 
+                
+                                let avg = 0, total = 0;
+                                if(resturant.reviews)
+                                {
+                                    for(let r of resturant.reviews)
+                                    {
+                                        total += r.rating
+                                    }
+                                    avg = total/resturant.reviews.length
+                                }
+                                
+                
+                            %>
+           
+                           
+          
+                            <p class="card-text"><%= avg.toFixed(1) %> / 5 </p>
                             <p class="card-text">Category: <%= resturant.Category %></p>
                             <a href="/show/<%= resturant._id %>" class="btn btn-warning w-100">View Details</a>
                         </div>

@@ -6,7 +6,8 @@ const methodOverride = require('method-override')
 engine = require('ejs-mate');
 
 const Resturant = require("./models/Resturant")
-
+const Review = require("./models/review.js")
+const Item = require("./models/items.js")
 
 app.set("views", path.join(__dirname, "views"))
 app.engine('ejs', engine);
@@ -38,7 +39,7 @@ app.get("/", (req, res)=>{
 })
 
 app.get("/resturants", async (req, res)=>{
-    let resturants = await Resturant.find({});
+    let resturants = await Resturant.find({}).populate("reviews");
     console.log(resturants)
     category = "all"
     res.render("resturants.ejs", {resturants, category})
@@ -47,7 +48,7 @@ app.get("/resturants", async (req, res)=>{
 app.get("/show/:id", async (req, res)=>{
     let id = req.params.id;
     console.log(id)
-    let rest = await Resturant.findById(id)
+    let rest = await Resturant.findById(id).populate("reviews")
     console.log(rest)
     res.render("show.ejs",  { rest})
 })
@@ -69,6 +70,20 @@ app.get("/search", async (req, res)=>{
     
     res.render("search.ejs", {location , resturants})
     
+})
+
+app.post("/show/:id/review", async(req, res)=>{
+  let review = req.body.review;
+  let id = req.params.id;
+  console.log(id)
+  let resturant = await Resturant.findById(id)
+  let newReview = new Review(review)
+  resturant.reviews.push(newReview)
+  
+  await newReview.save()
+  await resturant.save()
+  console.log("REview accepted")
+  res.redirect(`/show/${id}`)
 })
 
 

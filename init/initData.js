@@ -1,6 +1,12 @@
-let data = require("./data.js")
+let resturants = require("./resturants.js")
+let items = require("./items.js")
+let reviews = require("./reviews.js")
+
 const mongoose = require("mongoose")
+
 const Resturant = require("../models/Resturant")
+const Item = require("../models/items.js")
+const Review = require("../models/review.js")
 
 async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/FoodieHub');
@@ -13,8 +19,39 @@ main()
   .catch(err => console.log(err));
 
  async function initData() {
+    
     await Resturant.deleteMany({})
-    await Resturant.insertMany(data)
+    await Review.deleteMany({})
+    await Item.deleteMany({})
+
+    let temp = 0, temp1 = 0;
+    for(let i = 0;i < 5;i++)
+    {
+            
+      let newReview1 = new Review(reviews[temp++])
+      await newReview1.save()
+
+      let newReview2 = new Review(reviews[temp++])
+      await newReview2.save()
+      
+      let newResturant = new Resturant(resturants[i])
+      newResturant.reviews.push(newReview1)
+      newResturant.reviews.push(newReview2)
+      await newResturant.save()
+      
+      let newItem1 = new Item(items[temp1++])
+      newItem1.resturant = newResturant
+      await newItem1.save()
+
+      let newItem2 = new Item(items[temp1++])
+      newItem2.resturant = newResturant
+      await newItem2.save()
+      
+      
+    }
+    console.log("Data saved successfull")
+
+
 }
 initData()
 
