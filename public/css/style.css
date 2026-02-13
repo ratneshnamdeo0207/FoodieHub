@@ -340,3 +340,64 @@
   -webkit-animation-timing-function: ease-in-out;
           animation-timing-function: ease-in-out;
 }
+
+/* error class */
+ /* .error-page {
+            
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }  */
+
+        .err-pg{
+          display: flex;
+          justify-content: center;
+          margin: 15px;
+          
+        }
+
+        .error-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .error-container img {
+          width: 250px;
+          max-width: 100%;
+          margin: 0 auto 20px auto;   /* top right bottom left */
+          display: block;             /* VERY IMPORTANT */
+      }
+
+        .error-container h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .error-container p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .error-container .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.3s ease;
+        }
+
+        .error-container .btn:hover {
+            background-color: #0056b3;
+        }

@@ -1,0 +1,43 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg p-4 rounded-4" style="width: 400px;">
+        <h3 class="text-center mb-4">Login</h3>
+
+        <form action="/login" method="POST">
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    class="form-control"
+                    placeholder="Enter username"
+                    required
+                >
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    class="form-control"
+                    placeholder="Enter password"
+                    required
+                >
+            </div>
+
+            <button class="btn btn-dark w-100">Login</button>
+
+            <div class="text-center mt-3">
+                <small>Don’t have an account? 
+                    <a href="/signup">Sign Up</a>
+                </small>
+            </div>
+
+        </form>
+    </div>
+</div>

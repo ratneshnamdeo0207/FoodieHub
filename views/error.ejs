@@ -1,0 +1,14 @@
+<% layout('layouts/boilerplate') %>
+<body class="error-page">
+
+    <div class="err-pg">
+
+        <div class="error-container">
+            <img src="/images/fatal.png" alt="Error Image">
+            <h1>Oops! Something Went Wrong - <%= status %> </h1>
+            <p><%= message %> </p>
+            <a href="/" class="btn">Go Back Home</a>
+        </div>
+    </div>
+
+</body>
