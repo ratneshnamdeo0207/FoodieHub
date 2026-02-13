@@ -14,19 +14,33 @@
 
     <!-- Search Box -->
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="input-group">
-                <form class="d-flex me-4" role="search" style="width: 500px;" action="/search" method="get">
-                <input type="text" 
-                       class="form-control" 
-                         value="<%= typeof location !== 'undefined' && location ? location : '' %>" 
+  <div class="col-md-6">
 
-                       placeholder="Enter city name (e.g., Delhi)">
-                <button class="btn btn-primary">Search</button>
-                </form>
-            </div>
+    <form class="needs-validation" 
+          action="/search" 
+          method="get" 
+          novalidate>
+
+      <div class="input-group">
+
+        <input type="text"
+               class="form-control"
+               name="location"
+               value="<%= location || '' %>"
+               placeholder="Enter city name (e.g., Delhi)"
+               required>
+
+        <button class="btn btn-primary ms-3">Search</button>
+
+        <div class="invalid-feedback">
+          Please enter a city
         </div>
-    </div>
+
+      </div>
+
+    </form>
+
+  </div>
 </div>
 
 <!-- Example Results Section -->

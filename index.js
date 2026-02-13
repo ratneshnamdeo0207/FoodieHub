@@ -26,7 +26,7 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 
 let asyncWrap = require("./utils/asyncWrap.js")
-
+let {saveRedirectUrl} = require("./middleware.js")
 
 app.use(session({
   secret: 'keyboard cat',
@@ -79,7 +79,8 @@ app.get("/resturants", asyncWrap(async (req, res)=>{
     let resturants = await Resturant.find({}).populate("reviews");
     console.log(resturants)
     category = "all"
-    res.render("resturants.ejs", {resturants, category})
+    rating = "all"
+    res.render("resturants.ejs", {resturants, category, rating})
 }))
 
 app.get("/show/:id", asyncWrap(async (req, res)=>{
@@ -95,7 +96,18 @@ app.get("/show/:id", asyncWrap(async (req, res)=>{
 app.get("/filter", asyncWrap(async (req, res)=>{
     category = req.query.Category
     rating = req.query.rating
-    let resturants = await Resturant.find({Category: category,});
+    console.log("category:", category)
+    console.log("rating: ",  rating)
+
+    let resturant;
+    // let resturants = await Resturant.find({Category: category});
+    if(category != ""){
+    resturants = await Resturant.find({Category: category, rating : {$gt : rating}});
+  }
+  else{
+     resturants = await Resturant.find({rating : {$gt : rating}});
+  }
+
     console.log(resturants)
     res.render("resturants.ejs", {resturants, category, rating})
 }))
@@ -172,13 +184,14 @@ app.post("/signup", async(req, res)=>{
       res.redirect("/signup")
   }})
 
-app.get("/login", (req, res)=>{
+app.get("/login", saveRedirectUrl, (req, res)=>{
   res.render("login.ejs")
 })
 
-app.post('/login', 
+app.post('/login',   
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),(req, res)=> {
     req.flash("success", "Login Successful")
+    console.log(req.session)
     res.redirect('/');
 
   }); 

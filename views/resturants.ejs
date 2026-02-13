@@ -19,7 +19,7 @@
                 <label class="form-label">Category</label>
                 <select name="Category" class="form-select mb-3">
                     <!-- 'North Indian', 'South Indian', 'Chinese', 'Fast Food', 'Desserts', 'Beverages' -->
-                    <option>All</option>
+                    <option <%= category === "" ? "selected" : "" %> value="">All</option>
                     <option <%= category === "North Indian" ? "selected" : "" %>>North Indian</option>
                     <option <%= category === "South Indian" ? "selected" : "" %>>South Indian</option>
                     <option <%= category === "Chinese" ? "selected" : "" %>>Chinese</option>
@@ -30,9 +30,9 @@
 
                 <label class="form-label">Rating</label>
                 <select name="rating" class="form-select mb-3">
-                    <option>All</option>
-                    <option>4+ Stars</option>
-                    <option>3+ Stars</option>
+                    <option <%= rating === "0" ? "selected" : "" %> value="0">All</option>
+                    <option <%= rating === "4" ? "selected" : "" %> value="4">4+ Stars</option>
+                    <option <%= rating === "3" ? "selected" : "" %> value="3">3+ Stars</option>
                 </select>
 
                 <button class="btn btn-warning w-100">Apply Filters</button>
@@ -41,26 +41,31 @@
         </div>
 
         <!-- 🍴 Restaurant Cards -->
-        <div class="col-md-9">
-            <div class="row">
+        <% if (!resturants.length) { %>
 
-                <% for( let resturant of resturants) { %>
+
+          <div class="col-md  mb-8">
+            <div class="alert alert-secondary
+             text-center my-2 py-5">
+                No resturant found in this city.
+            </div>
+        </div>
+         <% } else{ %>
+        
+           <% for( let resturant of resturants) { %>
                 <div class="col-md-4 mb-4">
                     <div class="card restaurant-card shadow-sm">
                         <img src="https://images.unsplash.com/photo-1555992336-03a23c9b6c9c" class="card-img-top" height="200">
                         <div class="card-body">
                             <h5 class="card-title"><%= resturant.name %></h5>
-
-                           
-                           
-          
-                            <p class="card-text"><%= resturant.rating %> / 5 </p>
+                            <p class="card-text"><%= resturant.location %> • ⭐ 4.5</p>
                             <p class="card-text">Category: <%= resturant.Category %></p>
                             <a href="/show/<%= resturant._id %>" class="btn btn-warning w-100">View Details</a>
                         </div>
                     </div>
                 </div>
                 <% } %>
+         <% } %>
                 
 
                 

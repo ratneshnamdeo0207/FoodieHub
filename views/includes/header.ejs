@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse" id="mainNavbar">
 
       <!-- Center Links -->
-      <ul class="navbar-nav mx-auto gap-4">
+      <ul class="navbar-nav mx-auto gap-34">
         <li class="nav-item">
           <a class="nav-link <%= currentPath === '/' ? 'active fw-bold text-warning' : '' %>" href="/">Home</a>
         </li>
@@ -27,7 +27,7 @@
       </ul>
 
       <!-- Search Bar -->
-      <form class="d-flex me-4 navbar-search"
+     <form class="d-flex me-1 navbar-search needs-validation"
       role="search"
       style="width: 250px;"
       action="/search"
@@ -35,24 +35,23 @@
       novalidate>
 
   <div class="position-relative w-100">
-
     <input name="location"
-           class="form-control rounded-pill me-2"
+           class="form-control rounded-pill"
            type="search"
            placeholder="Search by City..."
            required>
 
-    <div class="invalid-feedback position-absolute start-0 mt-1 small">
-      Please enter a city
+    <div class="invalid-feedback">
+      Please enter a city.
     </div>
-
   </div>
 
-  <button class="btn btn-warning rounded-pill px-3 ms-2" type="submit">
+  <button class="btn btn-warning rounded-pill px-3 ms-3" type="submit">
     Search
   </button>
 
 </form>
+
 
 
 

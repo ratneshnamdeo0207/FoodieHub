@@ -129,7 +129,8 @@
   </div>
 
   <!-- ===== Review Form ===== -->
-  <div class="card border-0 shadow-sm rounded-4 p-4 mt-5">
+    <% if (currUser) { %>
+       <div class="card border-0 shadow-sm rounded-4 p-4 mt-5">
     <h4 class="mb-4">Leave a Review</h4>
 
     <form action="/show/<%= rest.id %>/review" 
@@ -170,6 +171,7 @@
 
     </form>
   </div>
+    <% } %>
 
   <!-- ===== Reviews Section ===== -->
   <div class="mt-5">
