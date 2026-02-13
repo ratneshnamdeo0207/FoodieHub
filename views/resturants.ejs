@@ -51,24 +51,10 @@
                         <div class="card-body">
                             <h5 class="card-title"><%= resturant.name %></h5>
 
-                            <% 
-                
-                                let avg = 0, total = 0;
-                                if(resturant.reviews)
-                                {
-                                    for(let r of resturant.reviews)
-                                    {
-                                        total += r.rating
-                                    }
-                                    avg = total/resturant.reviews.length
-                                }
-                                
-                
-                            %>
-           
+                           
                            
           
-                            <p class="card-text"><%= avg.toFixed(1) %> / 5 </p>
+                            <p class="card-text"><%= resturant.rating %> / 5 </p>
                             <p class="card-text">Category: <%= resturant.Category %></p>
                             <a href="/show/<%= resturant._id %>" class="btn btn-warning w-100">View Details</a>
                         </div>

@@ -9,6 +9,7 @@ const passport = require("passport")
 const LocalStrategy = require("passport-local");
 const passportLocalMongoose = require('passport-local-mongoose');
 const flash = require('connect-flash');
+const zxcvbn = require("zxcvbn");
 
 const Resturant = require("./models/Resturant")
 const Review = require("./models/review.js")
@@ -37,7 +38,7 @@ app.use(session({
     }
 }))
 // req.user
-app.use(flash());
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -45,6 +46,15 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(flash());
+
+app.use((req, res, next)=>{
+  res.locals.success = req.flash("success")
+  res.locals.error = req.flash("error")
+  res.locals.currUser = req.user || null; 
+  res.locals.currentPath  = req.path 
+  next();
+})
 
 let port = 4000
 app.listen(port, () => {
@@ -85,7 +95,7 @@ app.get("/show/:id", asyncWrap(async (req, res)=>{
 app.get("/filter", asyncWrap(async (req, res)=>{
     category = req.query.Category
     rating = req.query.rating
-    let resturants = await Resturant.find({Category: category});
+    let resturants = await Resturant.find({Category: category,});
     console.log(resturants)
     res.render("resturants.ejs", {resturants, category, rating})
 }))
@@ -102,36 +112,85 @@ app.post("/show/:id/review", asyncWrap(async(req, res)=>{
   let id = req.params.id;
   console.log(id)
   let resturant = await Resturant.findById(id)
+
   let newReview = new Review(review)
   resturant.reviews.push(newReview)
+  
   await newReview.save()
   await resturant.save()
+  resturant = await Resturant.findById(id).populate("reviews")
+  
+  let avg = 0, total = 0;
+  if(resturant.reviews)
+  {
+    for(let r of resturant.reviews)
+    {
+      total += r.rating
+    }
+  }
+   avg = total/resturant.reviews.length
+   console.log(avg)
+   avg = avg.toFixed(1)
+   resturant.rating = avg
+   await resturant.save()
+   
   console.log("REview accepted")
+  req.flash("success", "Thanks! for your review")
   res.redirect(`/show/${id}`)
 }))
 
-app.get("/signup", (req, res)=>{
+app.get("/signup", (req, res)=>{c 
   res.render("signup.ejs")
 })
 
-app.post("/signup", asyncWrap(async(req, res)=>{
-  let {username, password, email} = req.body
-  // let user = req.body.user
-  let newUser = new User({username: username, email: email})
-  let registeredUser = await User.register(newUser, password)
-  console.log("New User Registered")
-  res.redirect("/")
-}))
+app.post("/signup", async(req, res)=>{
+  try{
+      let {username, password, email} = req.body
+        // let user = req.body.user
+        let newUser = new User({username: username, email: email})
+        let result = zxcvbn(password);
+
+        if (result.score >= 2) { // 0=weak, 4=strong
+            let registeredUser = await User.register(newUser, password);
+            console.log(registeredUser);
+            
+            req.login(registeredUser, (err) => {
+                if (err) {
+                    return next(err);
+                }
+                req.flash("success", "Welcome to Wanderlust");
+                res.redirect("/");
+            })} 
+            else {
+            console.log("❌ Weak password");
+            req.flash("error", "Weak Password")
+            res.redirect("/signup")
+        }
+  }catch(err)
+  {
+      req.flash("error", err.message)
+      res.redirect("/signup")
+  }})
 
 app.get("/login", (req, res)=>{
   res.render("login.ejs")
 })
 
 app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),(req, res)=> {
+  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),(req, res)=> {
+    req.flash("success", "Login Successful")
     res.redirect('/');
+
   }); 
-  
+app.get("/logout", (req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        req.flash("success", "You are logged out!!")
+        res.redirect("/")
+  })})
+   
 app.get("/session", (req, res)=>{
   console.log(req.session)
 })

@@ -26,16 +26,8 @@
         </p>
 
         <h5 class="text-warning mb-3">
-          <% 
-            let avg = 0, total = 0;
-            if(rest.reviews && rest.reviews.length > 0){
-              for(let r of rest.reviews){
-                total += r.rating;
-              }
-              avg = total / rest.reviews.length;
-            }
-          %>
-          ⭐ <%= avg ? avg.toFixed(1) : "0.0" %> / 5
+        
+          ⭐ <%= rest.rating %> / 5
         </h5>
 
         <p class="text-secondary">

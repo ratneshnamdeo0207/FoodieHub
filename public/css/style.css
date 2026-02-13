@@ -401,3 +401,17 @@
         .error-container .btn:hover {
             background-color: #0056b3;
         }
+
+        /* search navbar form validation css */
+        .navbar-search .invalid-feedback {
+          display: none;
+          color: #dc3545;
+        }
+
+        .navbar-search.was-validated .form-control:invalid ~ .invalid-feedback {
+          display: block;
+        }
+
+        .navbar-search .form-control:invalid {
+          border-color: #dc3545;
+        }

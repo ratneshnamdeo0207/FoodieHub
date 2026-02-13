@@ -1,0 +1,35 @@
+<% if (success && success.length) { %>
+  <div class="position-fixed top-20 start-50 translate-middle-x mt-1" style="z-index: 1055; width: 100%; max-width: 500px;">
+    <div class="alert alert-success alert-dismissible fade show shadow-lg rounded-4 border-0 d-flex align-items-center" role="alert">
+      
+      <!-- Icon -->
+      <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+
+      <!-- Message -->
+      <div class="flex-grow-1 fw-semibold">
+        <%= success %>
+      </div>
+
+      <!-- Close Button -->
+      <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+<% } %>
+
+<% if (error && error.length) { %>
+  <div class="position-absolute top-25 start-50 translate-middle-x mt-1" style="z-index: 1055; width: 100%; max-width: 500px;">
+    <div class="alert alert-danger alert-dismissible fade show shadow-lg rounded-4 border-0 d-flex align-items-center" role="alert">
+      
+      <!-- Icon -->
+      <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+
+      <!-- Message -->
+      <div class="flex-grow-1 fw-semibold">
+        <%= error %>
+      </div>
+
+      <!-- Close Button -->
+      <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+<% } %>

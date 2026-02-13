@@ -9,6 +9,7 @@ const resturantSchema = new Schema({
    closingHour: String,
    startingPrice: Number,
    endingPrice: Number,
+   rating: Number,
    Category : {
     type: String,
     enum: ['North Indian', 'South Indian', 'Chinese', 'Fast Food', 'Desserts', 'Beverages']

@@ -16,32 +16,62 @@
       <!-- Center Links -->
       <ul class="navbar-nav mx-auto gap-4">
         <li class="nav-item">
-          <a class="nav-link active fw-semibold" href="/">Home</a>
+          <a class="nav-link <%= currentPath === '/' ? 'active fw-bold text-warning' : '' %>" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-semibold" href="/resturants">Restaurants</a>
+          <a class="nav-link <%= currentPath.startsWith('/resturants') ? 'active fw-bold text-warning' : '' %>" href="/resturants">Resturants</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-semibold" href="#">Offers</a>
+         <a class="nav-link <%= currentPath === '/offers' ? 'active fw-bold text-warning' : '' %>" href="/offers">Offers</a>
         </li>
       </ul>
 
       <!-- Search Bar -->
-      <form class="d-flex me-4" role="search" style="width: 250px;" action="/search" method="get">
-        <input name="location" class="form-control rounded-pill me-2" type="search" placeholder="Search by City...">
-        <button class="btn btn-warning rounded-pill px-3" type="submit">
-          Search
-        </button>
-      </form>
+      <form class="d-flex me-4 navbar-search"
+      role="search"
+      style="width: 250px;"
+      action="/search"
+      method="get"
+      novalidate>
+
+  <div class="position-relative w-100">
+
+    <input name="location"
+           class="form-control rounded-pill me-2"
+           type="search"
+           placeholder="Search by City..."
+           required>
+
+    <div class="invalid-feedback position-absolute start-0 mt-1 small">
+      Please enter a city
+    </div>
+
+  </div>
+
+  <button class="btn btn-warning rounded-pill px-3 ms-2" type="submit">
+    Search
+  </button>
+
+</form>
+
+
 
       <!-- Auth Buttons -->
       <div class="d-flex gap-2">
+        <% if (currUser) { %>
+          <a href="/logout" class="btn btn-outline-light rounded-pill px-3">
+          Logout
+        </a>
+        <% } else { %>
+         
         <a href="/login" class="btn btn-outline-light rounded-pill px-3">
           Login
         </a>
         <a href="/signup" class="btn btn-warning rounded-pill px-3">
           Sign Up
         </a>
+        <% } %>
+         
       </div>
 
     </div>
