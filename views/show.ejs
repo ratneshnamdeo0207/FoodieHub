@@ -56,21 +56,23 @@
             <%= rest.openingHour %> – <%= rest.closingHour %>
           </span>
         </p>
-
-        <div class="mt-4">
-          <a href="/restaurants/<%= rest.id %>/edit" 
-             class="btn btn-outline-dark rounded-pill px-4 me-2">
-            Edit
-          </a>
-
-          <form action="/restaurants/<%= rest.id %>?_method=DELETE" 
-                method="POST" 
-                class="d-inline">
-            <button class="btn btn-danger rounded-pill px-4">
-              Delete
-            </button>
-          </form>
-        </div>
+        <% if (currUser && currUser.id == rest.owner.id) { %>
+         
+          <div class="mt-4">
+            <a href="/show/<%= rest.id %>/edit" 
+               class="btn btn-outline-dark rounded-pill px-4 me-2">
+              Edit
+            </a>
+  
+            <form action="/restaurants/<%= rest.id %>?_method=DELETE" 
+                  method="POST" 
+                  class="d-inline">
+              <button class="btn btn-danger rounded-pill px-4">
+                Delete
+              </button>
+            </form>
+          </div>
+        <% } %>
 
       </div>
     </div>

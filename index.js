@@ -26,7 +26,7 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 
 let asyncWrap = require("./utils/asyncWrap.js")
-let {saveRedirectUrl} = require("./middleware.js")
+let {saveRedirectUrl, saveReturnTo} = require("./middleware.js")
 
 app.use(session({
   secret: 'keyboard cat',
@@ -72,6 +72,7 @@ main()
   .catch(err => console.log(err));
 
 app.get("/", (req, res)=>{
+ 
     res.render("home")
 })
 
@@ -86,7 +87,10 @@ app.get("/resturants", asyncWrap(async (req, res)=>{
 app.get("/show/:id", asyncWrap(async (req, res)=>{
     let id = req.params.id;
     console.log(id)
-    let rest = await Resturant.findById(id).populate("reviews")
+    let rest = await Resturant
+    .findById(id)
+    .populate("reviews")
+    .populate("owner");
     let items = await Item.find({resturant: id})
     console.log(items)
     console.log(rest)
@@ -151,11 +155,11 @@ app.post("/show/:id/review", asyncWrap(async(req, res)=>{
   res.redirect(`/show/${id}`)
 }))
 
-app.get("/signup", (req, res)=>{c 
+app.get("/signup", saveReturnTo, (req, res)=>{ 
   res.render("signup.ejs")
 })
 
-app.post("/signup", async(req, res)=>{
+app.post("/signup",saveRedirectUrl,  async(req, res)=>{
   try{
       let {username, password, email} = req.body
         // let user = req.body.user
@@ -170,8 +174,11 @@ app.post("/signup", async(req, res)=>{
                 if (err) {
                     return next(err);
                 }
-                req.flash("success", "Welcome to Wanderlust");
-                res.redirect("/");
+               req.flash("success", "Welcome to FoodieHub")
+                const redirectUrl = res.locals.redirectUrl || "/";
+                delete req.session.returnTo;
+
+                res.redirect(redirectUrl);
             })} 
             else {
             console.log("❌ Weak password");
@@ -184,26 +191,59 @@ app.post("/signup", async(req, res)=>{
       res.redirect("/signup")
   }})
 
-app.get("/login", saveRedirectUrl, (req, res)=>{
+app.get("/login", saveReturnTo, (req, res)=>{
+  // console.log(req.query.redirect)
+  // if(req.query.redirect)
+  // {
+  //   req.session.returnTo = req.query.redirect
+  //   console.log(req.session.returnTo)
+  // }
   res.render("login.ejs")
+  
 })
 
-app.post('/login',   
+app.post('/login', saveRedirectUrl,   
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),(req, res)=> {
     req.flash("success", "Login Successful")
-    console.log(req.session)
-    res.redirect('/');
+     const redirectUrl = res.locals.redirectUrl || "/";
+    delete req.session.returnTo;
+
+    res.redirect(redirectUrl);
 
   }); 
-app.get("/logout", (req, res, next) => {
+app.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
     req.logout((err) => {
         if (err) {
             return next(err);
         }
         req.flash("success", "You are logged out!!")
-        res.redirect("/")
+          const redirectUrl = res.locals.redirectUrl || "/";
+          delete req.session.returnTo;
+
+          res.redirect(redirectUrl);
   })})
+
+  app.get("/show/:id/edit", async (req, res) => {
+    let id = req.params.id;
+    console.log(id)
+    let rest = await Resturant.findById(id)
+    console.log(rest)
+    res.render("edit.ejs", {rest});
+  })
+
+  app.put("/show/:id/edit", async (req, res)=>{
+    let resturant = req.body.resturant;
+    console.log(resturant)
+    let id = req.params.id;
+    console.log(id)
+    let rest = await Resturant.findById(id)
+    
+
+  })
+
+  
    
+  
 app.get("/session", (req, res)=>{
   console.log(req.session)
 })

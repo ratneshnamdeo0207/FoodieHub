@@ -7,6 +7,7 @@ const mongoose = require("mongoose")
 const Resturant = require("../models/Resturant")
 const Item = require("../models/items.js")
 const Review = require("../models/review.js")
+const User = require("../models/users.js")
 
 async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/FoodieHub');
@@ -37,6 +38,11 @@ main()
       let newResturant = new Resturant(resturants[i])
       newResturant.reviews.push(newReview1)
       newResturant.reviews.push(newReview2)
+// ObjectId('698f14a9b1433c495119b388'),
+      let user = await User.findById("698f14a9b1433c495119b388")
+
+      newResturant.owner = user
+
       await newResturant.save()
       
       let newItem1 = new Item(items[temp1++])

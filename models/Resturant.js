@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const Review = require("./review.js")
+const User = require("./users.js")
 const resturantSchema = new Schema({
   name: String, // String is shorthand for {type: String}
   location: String,
@@ -10,6 +11,10 @@ const resturantSchema = new Schema({
    startingPrice: Number,
    endingPrice: Number,
    rating: Number,
+   owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
    Category : {
     type: String,
     enum: ['North Indian', 'South Indian', 'Chinese', 'Fast Food', 'Desserts', 'Beverages']

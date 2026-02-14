@@ -58,15 +58,15 @@
       <!-- Auth Buttons -->
       <div class="d-flex gap-2">
         <% if (currUser) { %>
-          <a href="/logout" class="btn btn-outline-light rounded-pill px-3">
+          <a href="/logout?redirect=<%= currentPath%>" class="btn btn-outline-light rounded-pill px-3">
           Logout
         </a>
         <% } else { %>
          
-        <a href="/login" class="btn btn-outline-light rounded-pill px-3">
+        <a href="/login?redirect=<%= currentPath%>" class="btn btn-outline-light rounded-pill px-3">
           Login
         </a>
-        <a href="/signup" class="btn btn-warning rounded-pill px-3">
+        <a href="/signup?redirect=<%= currentPath%>" class="btn btn-warning rounded-pill px-3">
           Sign Up
         </a>
         <% } %>

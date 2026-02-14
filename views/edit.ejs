@@ -1,0 +1,175 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container py-5">
+
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+        <!-- Header -->
+        <div class="bg-dark text-white text-center py-4">
+          <h3 class="mb-0 fw-semibold">Edit Restaurant</h3>
+          <small class="text-light opacity-75">Update restaurant details below</small>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body p-5">
+
+          <form action="/show/<%= rest._id %>/edit?_method=PUT" 
+                method="POST" 
+                class="needs-validation" 
+                novalidate>
+
+            <!-- Name -->
+            <div class="form-floating mb-4">
+              <input type="text" 
+                     class="form-control rounded-3" 
+                     id="name"
+                     name="resturant[name]"
+                     value="<%= rest.name %>" 
+                     placeholder="Restaurant Name"
+                     required>
+              <label for="name">Restaurant Name</label>
+            </div>
+
+            <!-- Location -->
+            <div class="form-floating mb-4">
+              <input type="text" 
+                     class="form-control rounded-3" 
+                     id="location"
+                     name="resturant[location]"
+                     value="<%= rest.location %>" 
+                     placeholder="Location"
+                     required>
+              <label for="location">Location</label>
+            </div>
+
+            <!-- Description -->
+            <div class="form-floating mb-4">
+              <textarea class="form-control rounded-3"
+                        placeholder="Description"
+                        id="description"
+                        name="resturant[description]"
+                        style="height: 100px"
+                        required><%= rest.description %></textarea>
+              <label for="description">Description</label>
+            </div>
+
+           <div class="row">
+
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-semibold">Opening Hour</label>
+                <select name="resturant[openingHour]" class="form-select rounded-3" required>
+                <option value="09:00 AM">09:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="01:00 PM">01:00 PM</option>
+                <option value="02:00 PM">02:00 PM</option>
+                <option value="03:00 PM">03:00 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
+                <option value="05:00 PM">05:00 PM</option>
+                <option value="06:00 PM">06:00 PM</option>
+                <option value="07:00 PM">07:00 PM</option>
+                <option value="08:00 PM">08:00 PM</option>
+                <option value="09:00 PM">09:00 PM</option>
+                <option value="10:00 PM">10:00 PM</option>
+                <option value="11:00 PM">11:00 PM</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <label class="form-label fw-semibold">Closing Hour</label>
+                <select name="resturant[closingHour]" class="form-select rounded-3" required>
+                 <option value="09:00 AM">09:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="01:00 PM">01:00 PM</option>
+                <option value="02:00 PM">02:00 PM</option>
+                <option value="03:00 PM">03:00 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
+                <option value="05:00 PM">05:00 PM</option>
+                <option value="06:00 PM">06:00 PM</option>
+                <option value="07:00 PM">07:00 PM</option>
+                <option value="08:00 PM">08:00 PM</option>
+                <option value="09:00 PM">09:00 PM</option>
+                <option value="10:00 PM">10:00 PM</option>
+                <option value="11:00 PM">11:00 PM</option>
+                </select>
+            </div>
+
+            </div>
+
+
+            <!-- Price Range -->
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="form-floating">
+                  <input type="number"
+                         class="form-control rounded-3"
+                         id="startingPrice"
+                         name="resturant[startingPrice]"
+                         value="<%= rest.startingPrice %>"
+                         placeholder="Starting Price"
+                         required>
+                  <label for="startingPrice">Starting Price (₹)</label>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <div class="form-floating">
+                  <input type="number"
+                         class="form-control rounded-3"
+                         id="endingPrice"
+                         name="resturant[endingPrice]"
+                         value="<%= rest.endingPrice %>"
+                         placeholder="Ending Price"
+                         required>
+                  <label for="endingPrice">Ending Price (₹)</label>
+                </div>
+              </div>
+            </div>
+
+                        <!-- Category -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Category</label>
+              <select name="resturant[Category]" class="form-select rounded-3" required>
+
+                <% const categories = ['North Indian', 'South Indian', 'Chinese', 'Fast Food', 'Desserts', 'Beverages']; %>
+
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat %>"
+                    <%= rest.Category === cat ? "selected" : "" %>>
+                    <%= cat %>
+                  </option>
+                <% }) %>
+
+              </select>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+
+              <a href="/resturants/<%= rest._id %>" 
+                 class="btn btn-outline-secondary px-4 rounded-pill">
+                 Cancel
+              </a>
+
+              <button type="submit" 
+                      class="btn btn-warning px-5 rounded-pill shadow-sm">
+                Update
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
