@@ -30,5 +30,12 @@
   })
 })()
 
+  // invisible form that is used to edit review on thee same page 
   
+function toggleEdit(id) {
+  document.getElementById("view-" + id).classList.toggle("d-none");
+  document.getElementById("edit-" + id).classList.toggle("d-none");
+}
+
+
 

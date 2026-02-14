@@ -26,7 +26,7 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 
 let asyncWrap = require("./utils/asyncWrap.js")
-let {saveRedirectUrl, saveReturnTo} = require("./middleware.js")
+let {saveRedirectUrl, saveReturnTo, isLogIn, isLogged, isReviewAuthor} = require("./middleware.js")
 
 app.use(session({
   secret: 'keyboard cat',
@@ -77,8 +77,8 @@ app.get("/", (req, res)=>{
 })
 
 app.get("/resturants", asyncWrap(async (req, res)=>{
-    let resturants = await Resturant.find({}).populate("reviews");
-    console.log(resturants)
+    let resturants = await Resturant.find({});
+    // console.log(resturants)
     category = "all"
     rating = "all"
     res.render("resturants.ejs", {resturants, category, rating})
@@ -86,22 +86,23 @@ app.get("/resturants", asyncWrap(async (req, res)=>{
 
 app.get("/show/:id", asyncWrap(async (req, res)=>{
     let id = req.params.id;
-    console.log(id)
+    // console.log(id)
     let rest = await Resturant
     .findById(id)
-    .populate("reviews")
-    .populate("owner");
+    .populate("owner")
+    .populate({path: "reviews", populate: {path: "author"}});
+    // console.log(rest)
     let items = await Item.find({resturant: id})
-    console.log(items)
-    console.log(rest)
+    // console.log(items)
+    // console.log(rest)
     res.render("show.ejs",  { rest, items})
 }))
 
 app.get("/filter", asyncWrap(async (req, res)=>{
     category = req.query.Category
     rating = req.query.rating
-    console.log("category:", category)
-    console.log("rating: ",  rating)
+    // console.log("category:", category)
+    // console.log("rating: ",  rating)
 
     let resturant;
     // let resturants = await Resturant.find({Category: category});
@@ -112,29 +113,29 @@ app.get("/filter", asyncWrap(async (req, res)=>{
      resturants = await Resturant.find({rating : {$gt : rating}});
   }
 
-    console.log(resturants)
+    // console.log(resturants)
     res.render("resturants.ejs", {resturants, category, rating})
 }))
 
 app.get("/search", asyncWrap(async (req, res)=>{
     let location = req.query.location;  
   let resturants = await Resturant.find({location: location});
-    console.log(resturants)
+    // console.log(resturants)
     res.render("search.ejs", {location , resturants})
 }))
 
-app.post("/show/:id/review", asyncWrap(async(req, res)=>{
+app.post("/show/:id/review", isLogIn,  asyncWrap(async(req, res)=>{
   let review = req.body.review;
   let id = req.params.id;
-  console.log(id)
-  let resturant = await Resturant.findById(id)
+  // console.log(id)
+  let resturant = await Resturant.findById(id).populate("reviews")
 
   let newReview = new Review(review)
+  newReview.author = req.user;
   resturant.reviews.push(newReview)
-  
+ 
   await newReview.save()
-  await resturant.save()
-  resturant = await Resturant.findById(id).populate("reviews")
+  // await resturant.save()
   
   let avg = 0, total = 0;
   if(resturant.reviews)
@@ -145,17 +146,30 @@ app.post("/show/:id/review", asyncWrap(async(req, res)=>{
     }
   }
    avg = total/resturant.reviews.length
-   console.log(avg)
+  //  console.log(avg)
    avg = avg.toFixed(1)
    resturant.rating = avg
    await resturant.save()
-   
-  console.log("REview accepted")
+  //  console.log(resturant)
+  // console.log("REview accepted")
   req.flash("success", "Thanks! for your review")
   res.redirect(`/show/${id}`)
 }))
 
-app.get("/signup", saveReturnTo, (req, res)=>{ 
+app.put("/show/:id/review/:reviewId",isLogIn, isReviewAuthor ,asyncWrap( async(req, res)=>{
+  let {id, reviewId} = req.params
+  // console.log(id)
+  // console.log(reviewId)
+  let review = req.body.review;
+  // console.log(review)
+  let updatedReview = await Review.findOneAndUpdate({_id : reviewId}, req.body.review, {returnDocument: "after", runValidator: true})
+  // console.log(updatedReview)
+  res.redirect(`/show/${id}`)
+
+}))
+
+app.get("/signup", isLogged, saveReturnTo, (req, res)=>{ 
+  
   res.render("signup.ejs")
 })
 
@@ -191,7 +205,7 @@ app.post("/signup",saveRedirectUrl,  async(req, res)=>{
       res.redirect("/signup")
   }})
 
-app.get("/login", saveReturnTo, (req, res)=>{
+app.get("/login", isLogged, saveReturnTo,  (req, res)=>{
   // console.log(req.query.redirect)
   // if(req.query.redirect)
   // {
@@ -206,7 +220,7 @@ app.post('/login', saveRedirectUrl,
   passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),(req, res)=> {
     req.flash("success", "Login Successful")
      const redirectUrl = res.locals.redirectUrl || "/";
-    delete req.session.returnTo;
+     delete req.session.returnTo;
 
     res.redirect(redirectUrl);
 
@@ -223,7 +237,7 @@ app.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
           res.redirect(redirectUrl);
   })})
 
-  app.get("/show/:id/edit", async (req, res) => {
+  app.get("/show/:id/edit", isLogIn, async (req, res) => {
     let id = req.params.id;
     console.log(id)
     let rest = await Resturant.findById(id)
@@ -237,9 +251,24 @@ app.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
     let id = req.params.id;
     console.log(id)
     let rest = await Resturant.findById(id)
-    
+    let updatedResturant = await Resturant.findOneAndUpdate({_id: id}, req.body.resturant, {returnDocument: "after", runValidator: true})
+    console.log(updatedResturant)
+    console.log("Updation Successful")
+    res.redirect(`/show/${id}`)
 
   })
+  app.delete("/show/:id/delete", async (req, res)=>{
+    let resturant = req.body.resturant;
+    console.log(resturant)
+    let id = req.params.id;
+    console.log(id)
+    let rest = await Resturant.findById(id)
+    let updatedResturant = await Resturant.findOneAndUpdate({_id: id},  {returnDocument: "after", runValidator: true})
+   
+    // res.redirect(`/show/${id}`)
+
+  })
+
 
   
    

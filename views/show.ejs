@@ -64,7 +64,7 @@
               Edit
             </a>
   
-            <form action="/restaurants/<%= rest.id %>?_method=DELETE" 
+            <form action="/show/<%= rest.id %>?_method=DELETE" 
                   method="POST" 
                   class="d-inline">
               <button class="btn btn-danger rounded-pill px-4">
@@ -180,31 +180,84 @@
     <h4 class="mb-4">Customer Reviews</h4>
 
     <div class="row g-4">
-      <% for(let r of rest.reviews){ %>
-        <div class="col-md-4">
-          <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+  <% for(let r of rest.reviews){ %>
+<div class="col-md-4">
+  <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
 
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="text-warning mb-0">
-                ⭐ <%= r.rating %>
-              </h6>
-              <small class="text-muted">
-                <%= new Date(r.createdAt).toDateString() %>
-              </small>
-            </div>
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="text-warning mb-0">⭐ <%= r.rating %></h6>
+      
+      <small class="text-muted">
+        <%= new Date(r.createdAt).toDateString() %>
+      </small>
+    </div>
 
-            <p class="text-secondary">
-              <%= r.comment %>
-            </p>
+    <!-- Normal View -->
+    <div id="view-<%= r._id %>">
+      <p class="text-secondary"><%= r.comment %></p>
+      <strong class="text-muted ">
+      @<%= r.author ? r.author.username : "Anonymous" %>
+      </strong>
+      <hr>
+      <% if(currUser && currUser.id == r.author.id){ %>
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-sm btn-outline-primary rounded-pill"
+                onclick="toggleEdit('<%= r._id %>')">
+          ✏ Edit
+        </button>
 
-            <hr>
-
-            <small class="text-muted">— Anonymous</small>
-
-          </div>
-        </div>
+        <form action="/show/<%= rest._id %>/reviews/<%= r._id %>?_method=DELETE"
+              method="POST">
+          <button class="btn btn-sm btn-outline-danger rounded-pill">
+            🗑 Delete
+          </button>
+        </form>
+      </div>
       <% } %>
     </div>
+
+    <!-- Edit Form (Hidden Initially) -->
+    <div id="edit-<%= r._id %>" class="d-none">
+      <form action="/show/<%= rest._id %>/review/<%= r._id %>?_method=PUT"
+            method="POST">
+
+        <div class="mb-2">
+          <input type="number"
+                 name="review[rating]"
+                 value="<%= r.rating %>"
+                 class="form-control"
+                 min="1"
+                 max="5"
+                 required>
+        </div>
+
+        <div class="mb-2">
+          <textarea name="review[comment]"
+                    class="form-control"
+                    rows="3"
+                    required><%= r.comment %></textarea>
+        </div>
+
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-sm btn-success rounded-pill">
+            ✔ Save
+          </button>
+
+          <button type="button"
+                  class="btn btn-sm btn-secondary rounded-pill"
+                  onclick="toggleEdit('<%= r._id %>')">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+<% } %>
+
+</div>
+
   </div>
 
 </div>

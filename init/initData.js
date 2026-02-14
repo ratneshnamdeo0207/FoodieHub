@@ -24,23 +24,25 @@ main()
     await Resturant.deleteMany({})
     await Review.deleteMany({})
     await Item.deleteMany({})
+// ObjectId('698f14a9b1433c495119b388'),
+
+    let user = await User.findById("698f14a9b1433c495119b388")
 
     let temp = 0, temp1 = 0;
     for(let i = 0;i < 5;i++)
     {
             
       let newReview1 = new Review(reviews[temp++])
+      newReview1.author = user;
       await newReview1.save()
 
       let newReview2 = new Review(reviews[temp++])
+      newReview2.author= user;
       await newReview2.save()
       
       let newResturant = new Resturant(resturants[i])
       newResturant.reviews.push(newReview1)
       newResturant.reviews.push(newReview2)
-// ObjectId('698f14a9b1433c495119b388'),
-      let user = await User.findById("698f14a9b1433c495119b388")
-
       newResturant.owner = user
 
       await newResturant.save()
