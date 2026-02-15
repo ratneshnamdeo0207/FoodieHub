@@ -21,6 +21,9 @@
         <li class="nav-item">
           <a class="nav-link <%= currentPath.startsWith('/resturants') ? 'active fw-bold text-warning' : '' %>" href="/resturants">Resturants</a>
         </li>
+         <li class="nav-item">
+          <a class="nav-link <%= currentPath.startsWith('/resturant/new') ? 'active fw-bold text-warning' : '' %>" href="/resturant/new">Add Resturant</a>
+        </li>
         <li class="nav-item">
          <a class="nav-link <%= currentPath === '/offers' ? 'active fw-bold text-warning' : '' %>" href="/offers">Offers</a>
         </li>

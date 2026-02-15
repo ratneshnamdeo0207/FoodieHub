@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const Review = require("./review.js")
+const Item = require("./items.js")
 const User = require("./users.js")
 const resturantSchema = new Schema({
   name: String, // String is shorthand for {type: String}
@@ -26,6 +27,13 @@ const resturantSchema = new Schema({
     }
 ],
    
+})
+
+resturantSchema.post("findOneAndDelete", async (resturant)=>{
+    if(resturant.reviews){
+        await Review.deleteMany({_id: {$in: resturant.reviews}})
+    }
+    await Item.deleteMany({resturant: resturant._id})
 })
 const Resturant = mongoose.model("Resturant", resturantSchema)
 module.exports = Resturant

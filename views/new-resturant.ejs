@@ -1,61 +1,64 @@
 <% layout("layouts/boilerplate") %>
 
 <div class="container py-5">
-
   <div class="row justify-content-center">
-    <div class="col-lg-8">
+    <div class="col-md-8">
 
-      <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-
-        <!-- Header -->
-        <div class="bg-dark text-white text-center py-4">
-          <h3 class="mb-0 fw-semibold">Edit Restaurant</h3>
-          <small class="text-light opacity-75">Update restaurant details below</small>
-        </div>
-
-        <!-- Body -->
+      <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body p-5">
 
-          <form action="/show/<%= rest._id %>/edit?_method=PUT" 
-                method="POST" 
-                class="needs-validation" 
-                novalidate>
+          <h2 class="text-center fw-bold mb-4">Add New Restaurant 🍽️</h2>
+
+          <form action="/restaurants" method="POST" class="needs-validation" novalidate>
 
             <!-- Name -->
             <div class="form-floating mb-4">
-              <input type="text" 
-                     class="form-control rounded-3" 
+              <input type="text"
+                     class="form-control rounded-3"
                      id="name"
                      name="resturant[name]"
-                     value="<%= rest.name %>" 
                      placeholder="Restaurant Name"
                      required>
               <label for="name">Restaurant Name</label>
+              <div class="invalid-feedback">
+                Please enter restaurant name.
+              </div>
             </div>
 
             <!-- Location -->
             <div class="form-floating mb-4">
-              <input type="text" 
-                     class="form-control rounded-3" 
+              <input type="text"
+                     class="form-control rounded-3"
                      id="location"
                      name="resturant[location]"
-                     value="<%= rest.location %>" 
                      placeholder="Location"
                      required>
               <label for="location">Location</label>
+              <div class="invalid-feedback">
+                Please enter location.
+              </div>
             </div>
 
-            <!-- Description -->
-            <div class="form-floating mb-4">
-              <textarea class="form-control rounded-3"
-                        placeholder="Description"
-                        id="description"
-                        name="resturant[description]"
-                        style="height: 100px"
-                        required><%= rest.description %></textarea>
-              <label for="description">Description</label>
+            <!-- Category -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Category</label>
+              <select class="form-select rounded-3"
+                      name="resturant[Category]"
+                      required>
+                <option value="" selected disabled>Select Category</option>
+                <option>North Indian</option>
+                <option>South Indian</option>
+                <option>Chinese</option>
+                <option>Fast Food</option>
+                <option>Desserts</option>
+                <option>Beverages</option>
+              </select>
+              <div class="invalid-feedback">
+                Please select category.
+              </div>
             </div>
 
+            <!-- Opening & Closing Time -->
             <!-- <div class="row mb-4">
               <div class="col-md-6">
                 <div class="form-floating">
@@ -63,7 +66,6 @@
                          class="form-control rounded-3"
                          id="openingHour"
                          name="resturant[openingHour]"
-                         value= 
                          required>
                   <label for="openingHour">Opening Time</label>
                 </div>
@@ -75,14 +77,12 @@
                          class="form-control rounded-3"
                          id="closingHour"
                          name="resturant[closingHour]"
-                         value=
                          required>
                   <label for="closingHour">Closing Time</label>
                 </div>
               </div>
             </div> -->
-
-           <div class="row">
+             <div class="row">
 
             <div class="col-md-6 mb-4">
                 <label class="form-label fw-semibold">Opening Hour</label>
@@ -96,8 +96,7 @@
                 %>
 
                 <% for(time of times){ %>
-                  <option value="<%= time %>"
-                    <%= rest.openingHour === time ? "selected" : "" %>>
+                  <option >
                     <%= time %>
                   </option>
                 <% } %>
@@ -110,8 +109,7 @@
                 <select name="resturant[closingHour]" class="form-select rounded-3" required>
               
                 <% for(time of times){ %>
-                  <option value="<%= time %>"
-                    <%= rest.closingHour === time ? "selected" : "" %>>
+                  <option >
                     <%= time %>
                   </option>
                 <% } %>
@@ -124,27 +122,25 @@
 
 
             <!-- Price Range -->
-            <div class="row">
-              <div class="col-md-6 mb-4">
+            <div class="row mb-4">
+              <div class="col-md-6">
                 <div class="form-floating">
                   <input type="number"
                          class="form-control rounded-3"
                          id="startingPrice"
                          name="resturant[startingPrice]"
-                         value="<%= rest.startingPrice %>"
                          placeholder="Starting Price"
                          required>
                   <label for="startingPrice">Starting Price (₹)</label>
                 </div>
               </div>
 
-              <div class="col-md-6 mb-4">
+              <div class="col-md-6">
                 <div class="form-floating">
                   <input type="number"
                          class="form-control rounded-3"
                          id="endingPrice"
                          name="resturant[endingPrice]"
-                         value="<%= rest.endingPrice %>"
                          placeholder="Ending Price"
                          required>
                   <label for="endingPrice">Ending Price (₹)</label>
@@ -152,36 +148,25 @@
               </div>
             </div>
 
-                        <!-- Category -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Category</label>
-              <select name="resturant[Category]" class="form-select rounded-3" required>
-
-                <% const categories = ['North Indian', 'South Indian', 'Chinese', 'Fast Food', 'Desserts', 'Beverages']; %>
-
-                <% categories.forEach(cat => { %>
-                  <option value="<%= cat %>"
-                    <%= rest.Category === cat ? "selected" : "" %>>
-                    <%= cat %>
-                  </option>
-                <% }) %>
-
-              </select>
+            <!-- Description -->
+            <div class="form-floating mb-4">
+              <textarea class="form-control rounded-3"
+                        id="description"
+                        name="resturant[description]"
+                        placeholder="Description"
+                        style="height: 120px"
+                        required></textarea>
+              <label for="description">Description</label>
+              <div class="invalid-feedback">
+                Please enter description.
+              </div>
             </div>
 
-            <!-- Buttons -->
-            <div class="d-flex justify-content-between mt-4">
-
-              <a href="/resturants/<%= rest._id %>" 
-                 class="btn btn-outline-secondary px-4 rounded-pill">
-                 Cancel
-              </a>
-
-              <button type="submit" 
-                      class="btn btn-warning px-5 rounded-pill shadow-sm">
-                Update
+            <!-- Submit -->
+            <div class="d-grid">
+              <button class="btn btn-dark btn-lg rounded-3">
+                Create Restaurant
               </button>
-
             </div>
 
           </form>
@@ -191,5 +176,4 @@
 
     </div>
   </div>
-
 </div>
