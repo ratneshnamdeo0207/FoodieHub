@@ -10,11 +10,11 @@ module.exports.saveRedirectUrl = (req, res, next) => {
     next();
 };
 module.exports.saveReturnTo = (req, res, next) =>{
-     console.log(req.query.redirect)
+    //  console.log(req.query.redirect)
       if(req.query.redirect)
       {
         req.session.returnTo = req.query.redirect
-        console.log(req.session.returnTo)
+        // console.log(req.session.returnTo)
       }
       next()
 }
@@ -46,9 +46,9 @@ module.exports.isLogged = (req, res, next)=>{
 
 module.exports.isReviewAuthor = async (req, res, next)=>{
     let {id, reviewId}= req.params
-    console.log(id, reviewId)
+    // console.log(id, reviewId)
     let review = await Review.findById(reviewId);
-    console.log(review)
+    // console.log(review)
     if(!review.author.equals(res.locals.currUser._id))
     {
         req.flash("error", "You dont have permission to do this")

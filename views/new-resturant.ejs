@@ -1,51 +1,58 @@
 <% layout("layouts/boilerplate") %>
 
+<%
+  const times = [
+    "08:00 AM","09:00 AM","10:00 AM","11:00 AM",
+    "12:00 PM","01:00 PM","02:00 PM","03:00 PM",
+    "04:00 PM","05:00 PM","06:00 PM","07:00 PM",
+    "08:00 PM","09:00 PM","10:00 PM","11:00 PM"
+  ];
+%>
+
 <div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-lg-7">
 
-      <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-body p-5">
+      <div class="card border-0 rounded-4 shadow-lg">
+        <div class="card-body p-4">
 
-          <h2 class="text-center fw-bold mb-4">Add New Restaurant 🍽️</h2>
+          <h4 class="fw-bold mb-4 text-center">Create Restaurant</h4>
 
-          <form action="/restaurants" method="POST" class="needs-validation" novalidate>
+          <form action="/resturants" method="POST" class="needs-validation" novalidate>
 
-            <!-- Name -->
-            <div class="form-floating mb-4">
-              <input type="text"
-                     class="form-control rounded-3"
-                     id="name"
-                     name="resturant[name]"
-                     placeholder="Restaurant Name"
-                     required>
-              <label for="name">Restaurant Name</label>
-              <div class="invalid-feedback">
-                Please enter restaurant name.
+            <!-- Name + Location -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Name</label>
+                <input type="text"
+                       class="form-control form-control-sm shadow-sm"
+                       name="resturant[name]"
+                       placeholder="Enter restaurant name"
+                       required>
+                <div class="invalid-feedback">
+                  Please enter restaurant name.
+                </div>
               </div>
-            </div>
 
-            <!-- Location -->
-            <div class="form-floating mb-4">
-              <input type="text"
-                     class="form-control rounded-3"
-                     id="location"
-                     name="resturant[location]"
-                     placeholder="Location"
-                     required>
-              <label for="location">Location</label>
-              <div class="invalid-feedback">
-                Please enter location.
+              <div class="col-md-6">
+                <label class="form-label">Location</label>
+                <input type="text"
+                       class="form-control form-control-sm shadow-sm"
+                       name="resturant[location]"
+                       placeholder="Enter location"
+                       required>
+                <div class="invalid-feedback">
+                  Please enter location.
+                </div>
               </div>
             </div>
 
             <!-- Category -->
-            <div class="mb-4">
-              <label class="form-label fw-semibold">Category</label>
-              <select class="form-select rounded-3"
-                      name="resturant[Category]"
-                      required>
-                <option value="" selected disabled>Select Category</option>
+            <div class="mb-3">
+              <label class="form-label">Category</label>
+              <select class="form-select form-select-sm shadow-sm"
+                      name="resturant[Category]" required>
+                <option value="" disabled selected>Select Category</option>
                 <option>North Indian</option>
                 <option>South Indian</option>
                 <option>Chinese</option>
@@ -54,118 +61,102 @@
                 <option>Beverages</option>
               </select>
               <div class="invalid-feedback">
-                Please select category.
+                Please select a category.
               </div>
             </div>
 
-            <!-- Opening & Closing Time -->
-            <!-- <div class="row mb-4">
+            <!-- Opening + Closing -->
+            <div class="row g-3 mb-3">
               <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="time"
-                         class="form-control rounded-3"
-                         id="openingHour"
-                         name="resturant[openingHour]"
-                         required>
-                  <label for="openingHour">Opening Time</label>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="time"
-                         class="form-control rounded-3"
-                         id="closingHour"
-                         name="resturant[closingHour]"
-                         required>
-                  <label for="closingHour">Closing Time</label>
-                </div>
-              </div>
-            </div> -->
-             <div class="row">
-
-            <div class="col-md-6 mb-4">
-                <label class="form-label fw-semibold">Opening Hour</label>
-                <select name="resturant[openingHour]" class="form-select rounded-3" required>
-                <%
-                  const times = [
-                    "10:00 AM","11:00 AM","12:00 PM","01:00 PM","02:00 PM",
-                    "03:00 PM","04:00 PM","05:00 PM","06:00 PM",
-                    "07:00 PM","08:00 PM","09:00 PM","10:00 PM","11:00 PM"
-                  ];
-                %>
-
-                <% for(time of times){ %>
-                  <option >
-                    <%= time %>
-                  </option>
-                <% } %>
-
+                <label class="form-label">Opening Hour</label>
+                <select name="resturant[openingHour]"
+                        class="form-select form-select-sm shadow-sm"
+                        required>
+                  <option value="" disabled selected>Select Opening</option>
+                  <% for(let time of times){ %>
+                    <option value="<%= time %>"><%= time %></option>
+                  <% } %>
                 </select>
-            </div>
-
-            <div class="col-md-6 mb-4">
-                <label class="form-label fw-semibold">Closing Hour</label>
-                <select name="resturant[closingHour]" class="form-select rounded-3" required>
-              
-                <% for(time of times){ %>
-                  <option >
-                    <%= time %>
-                  </option>
-                <% } %>
-
-
-                </select>
-            </div>
-
-            </div>
-
-
-            <!-- Price Range -->
-            <div class="row mb-4">
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="number"
-                         class="form-control rounded-3"
-                         id="startingPrice"
-                         name="resturant[startingPrice]"
-                         placeholder="Starting Price"
-                         required>
-                  <label for="startingPrice">Starting Price (₹)</label>
+                <div class="invalid-feedback">
+                  Please select opening time.
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="number"
-                         class="form-control rounded-3"
-                         id="endingPrice"
-                         name="resturant[endingPrice]"
-                         placeholder="Ending Price"
-                         required>
-                  <label for="endingPrice">Ending Price (₹)</label>
+                <label class="form-label">Closing Hour</label>
+                <select name="resturant[closingHour]"
+                        class="form-select form-select-sm shadow-sm"
+                        required>
+                  <option value="" disabled selected>Select Closing</option>
+                  <% for(let time of times){ %>
+                    <option value="<%= time %>"><%= time %></option>
+                  <% } %>
+                </select>
+                <div class="invalid-feedback">
+                  Please select closing time.
+                </div>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Starting Price (₹)</label>
+                <input type="number"
+                       class="form-control form-control-sm shadow-sm"
+                       name="resturant[startingPrice]"
+                       placeholder="Minimum price"
+                       required>
+                <div class="invalid-feedback">
+                  Please enter starting price.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Ending Price (₹)</label>
+                <input type="number"
+                       class="form-control form-control-sm shadow-sm"
+                       name="resturant[endingPrice]"
+                       placeholder="Maximum price"
+                       required>
+                <div class="invalid-feedback">
+                  Please enter ending price.
                 </div>
               </div>
             </div>
 
             <!-- Description -->
-            <div class="form-floating mb-4">
-              <textarea class="form-control rounded-3"
-                        id="description"
+            <div class="mb-4">
+              <label class="form-label">Description</label>
+              <textarea class="form-control form-control-sm shadow-sm"
+                        rows="3"
                         name="resturant[description]"
-                        placeholder="Description"
-                        style="height: 120px"
+                        placeholder="Write short description..."
                         required></textarea>
-              <label for="description">Description</label>
               <div class="invalid-feedback">
                 Please enter description.
               </div>
             </div>
 
+            <!-- Items Section -->
+            <hr class="mb-3">
+
+            <div id="itemsWrapper">
+              <div id="itemsContainer"></div>
+
+              <div class="mt-2">
+                <button type="button"
+                        class="btn btn-sm btn-outline-dark shadow-sm"
+                        onclick="addItem()">
+                  + Add Item
+                </button>
+              </div>
+            </div>
+
             <!-- Submit -->
-            <div class="d-grid">
-              <button class="btn btn-dark btn-lg rounded-3">
-                Create Restaurant
+            <div class="text-end mt-4">
+              <button class="btn btn-dark btn-sm px-4 shadow-sm">
+                Create
               </button>
             </div>
 
@@ -177,3 +168,96 @@
     </div>
   </div>
 </div>
+
+<script>
+let itemIndex = 0;
+
+function addItem() {
+  const container = document.getElementById("itemsContainer");
+
+  const html = `
+    <div class="border rounded-4 p-3 mb-3 shadow-sm bg-white position-relative" id="item-${itemIndex}">
+      <button type="button"
+              class="btn-close position-absolute top-0 end-0 m-2"
+              onclick="removeItem(${itemIndex})">
+      </button>
+
+      <div class="row g-3 mt-2">
+
+        <div class="col-md-6">
+          <label class="form-label">Item Name</label>
+          <input type="text"
+                 class="form-control form-control-sm shadow-sm"
+                 name="items[${itemIndex}][name]"
+                 placeholder="Enter item name"
+                 required>
+          <div class="invalid-feedback">
+            Please enter item name.
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Price (₹)</label>
+          <input type="number"
+                 class="form-control form-control-sm shadow-sm"
+                 name="items[${itemIndex}][price]"
+                 placeholder="Enter price"
+                 required>
+          <div class="invalid-feedback">
+            Please enter item price.
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Description</label>
+          <input type="text"
+                 class="form-control form-control-sm shadow-sm"
+                 name="items[${itemIndex}][description]"
+                 placeholder="Short item description"
+                 required>
+          <div class="invalid-feedback">
+            Please enter item description.
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label">Image URL</label>
+          <input type="text"
+                 class="form-control form-control-sm shadow-sm"
+                 name="items[${itemIndex}][image]"
+                 placeholder="Paste image link"
+                 required>
+          <div class="invalid-feedback">
+            Please enter image URL.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", html);
+  itemIndex++;
+}
+
+function removeItem(index) {
+  const item = document.getElementById(`item-${index}`);
+  if (item) item.remove();
+}
+
+/* Bootstrap Validation Script */
+(() => {
+  'use strict';
+  const forms = document.querySelectorAll('.needs-validation');
+
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+</script>

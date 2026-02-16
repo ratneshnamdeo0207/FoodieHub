@@ -25,10 +25,15 @@
           <i class="bi bi-geo-alt-fill"></i> <%= rest.location %>
         </p>
 
-        <h5 class="text-warning mb-3">
+       <% if (rest.reviews.length != 0) { %>
+         <h5 class="text-warning mb-3">
         
           ⭐ <%= rest.rating %> / 5
         </h5>
+       <% } else{ %>
+        <p>⭐ Be the first one to rate ⭐</p>                         
+
+      <% }  %>
 
         <p class="text-secondary">
           <%= rest.description %>
@@ -71,12 +76,84 @@
                 Delete
               </button>
             </form>
+
+               <!-- <div class="text-end mt-4"> -->
+              <button class="btn btn-dark rounded-pill px-4"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#addItemForm">
+                + Add Item
+              </button>
+            <!-- </div> -->
+
           </div>
         <% } %>
 
       </div>
     </div>
   </div>
+
+   <% if (currUser && currUser.id == rest.owner.id) { %>
+
+    <div class="collapse mt-4" id="addItemForm">
+      <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <h5 class="mb-4 fw-bold">Add New Menu Item</h5>
+
+        <form action="/show/<%= rest._id %>/item" method="POST">
+
+          <div class="row">
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Item Name</label>
+              <input type="text"
+                     name="item[name]"
+                     class="form-control rounded-3"
+                     placeholder="Enter item name"
+                     required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Price (₹)</label>
+              <input type="number"
+                     name="item[price]"
+                     class="form-control rounded-3"
+                     placeholder="Enter price"
+                     required>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label fw-semibold">Image URL</label>
+              <input type="text"
+                     name="item[image]"
+                     class="form-control rounded-3"
+                     placeholder="Paste image URL"
+                     required>
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea name="item[description]"
+                        class="form-control rounded-3"
+                        rows="3"
+                        placeholder="Write short description"
+                        required></textarea>
+            </div>
+
+          </div>
+
+          <div class="text-end">
+            <button class="btn btn-success rounded-pill px-4">
+              Save Item
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+
+  <% } %>
+
 
   <!-- ===== Menu Section ===== -->
   <div class="mt-5">

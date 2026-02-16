@@ -33,6 +33,7 @@ resturantSchema.post("findOneAndDelete", async (resturant)=>{
     if(resturant.reviews){
         await Review.deleteMany({_id: {$in: resturant.reviews}})
     }
+    
     await Item.deleteMany({resturant: resturant._id})
 })
 const Resturant = mongoose.model("Resturant", resturantSchema)

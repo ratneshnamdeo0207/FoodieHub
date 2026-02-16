@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+  }
 const express = require("express")
 const app = express();
 const mongoose = require("mongoose")
@@ -10,6 +13,10 @@ const LocalStrategy = require("passport-local");
 const passportLocalMongoose = require('passport-local-mongoose');
 const flash = require('connect-flash');
 const zxcvbn = require("zxcvbn");
+
+const multer  = require('multer')
+const {storage} = require("./cloudConfig.js")
+const upload = multer({ storage })
 
 const Resturant = require("./models/Resturant")
 const Review = require("./models/review.js")
@@ -101,9 +108,51 @@ app.get("/show/:id", asyncWrap(async (req, res)=>{
     res.render("show.ejs",  { rest, items})
 }))
 
+app.post("/show/:id/item", isLogIn, isOwner, asyncWrap(async(req, res)=>{
+    let id = req.params.id
+    let item = req.body.item
+    let resturant = await Resturant.findById(id)
+    let newItem = new Item(item)
+    newItem.resturant = resturant
+    newItem = await newItem.save()
+    console.log(newItem)
+
+    res.redirect(`/show/${id}`)
+
+}))
+
 app.get("/resturant/new", (req, res)=>{
   res.render("new-resturant.ejs")
 })
+
+app.post("/resturants",isLogIn, asyncWrap(async(req, res)=>{
+  let resturant = req.body.resturant
+  let items = req.body.items
+  // console.log(resturant)
+  // console.log(items)
+  resturant.rating = 0;
+  resturant.owner = req.user;
+
+  let newResturant = await new Resturant(resturant)
+  // console.log(newResturant)
+  newResturant = await newResturant.save()
+  console.log(newResturant)
+  
+  if(items.length > 0)
+  {
+    for(let item of items)
+    {
+      let newItem = new Item(item)
+      newItem.resturant = newResturant
+      await newItem.save()
+      console.log(item)
+
+    }
+  }
+
+  res.redirect("/resturants")
+}))
+
 app.get("/filter", asyncWrap(async (req, res)=>{
     category = req.query.Category
     rating = req.query.rating
@@ -309,6 +358,14 @@ app.get("/getuser", ((req, res)=>{
 }))
 
 
+app.use("/test", (req, res)=>{
+  res.render("test.ejs")
+})
+
+app.post("/test", upload.single("resturant[image]"), (req, res)=>{
+  console.log(req.file)
+  res.redirect("/")
+})
 app.use((err, req, res, next)=>{
     let {status = 500, message = "Some error occured"} = err;
     console.log("error")
