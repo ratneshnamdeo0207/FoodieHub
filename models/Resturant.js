@@ -12,6 +12,10 @@ const resturantSchema = new Schema({
    startingPrice: Number,
    endingPrice: Number,
    rating: Number,
+   image: {
+        url: String,
+        filename: String
+    },
    owner: {
         type: Schema.Types.ObjectId,
         ref: "User",

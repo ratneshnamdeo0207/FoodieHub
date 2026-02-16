@@ -1,4 +1,4 @@
-  let resturants =  [
+let resturants = [
   {
     name: "Spice Villa",
     location: "Jabalpur",
@@ -8,7 +8,11 @@
     startingPrice: 150,
     endingPrice: 600,
     Category: "North Indian",
-    rating: 4.5
+    rating: 4.5,
+    image: {
+      url: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
+      filename: "spice-villa"
+    }
   },
   {
     name: "Dosa Junction",
@@ -19,7 +23,11 @@
     startingPrice: 80,
     endingPrice: 350,
     Category: "South Indian",
-    rating: 4
+    rating: 4,
+    image: {
+      url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0",
+      filename: "dosa-junction"
+    }
   },
   {
     name: "Dragon Bowl",
@@ -30,7 +38,11 @@
     startingPrice: 120,
     endingPrice: 700,
     Category: "Chinese",
-    rating: 4.5
+    rating: 4.5,
+    image: {
+      url: "https://images.unsplash.com/photo-1563245372-f21724e3856d",
+      filename: "dragon-bowl"
+    }
   },
   {
     name: "Burger Hub",
@@ -41,7 +53,11 @@
     startingPrice: 100,
     endingPrice: 500,
     Category: "Fast Food",
-    rating: 3
+    rating: 3,
+    image: {
+      url: "https://images.unsplash.com/photo-1550547660-d9450f859349",
+      filename: "burger-hub"
+    }
   },
   {
     name: "Sweet Cravings",
@@ -52,8 +68,12 @@
     startingPrice: 90,
     endingPrice: 400,
     Category: "Desserts",
-    rating: 5
+    rating: 5,
+    image: {
+      url: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e",
+      filename: "sweet-cravings"
+    }
   }
-]
+];
 
-module.exports = resturants
+module.exports = resturants;

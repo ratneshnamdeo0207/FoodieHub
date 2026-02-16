@@ -125,20 +125,25 @@ app.get("/resturant/new", (req, res)=>{
   res.render("new-resturant.ejs")
 })
 
-app.post("/resturants",isLogIn, asyncWrap(async(req, res)=>{
+app.post("/resturants",isLogIn, upload.single("images"), asyncWrap(async(req, res)=>{
   let resturant = req.body.resturant
   let items = req.body.items
+  console.log("inside route")
+  console.log(req.file)
   // console.log(resturant)
   // console.log(items)
   resturant.rating = 0;
   resturant.owner = req.user;
-
-  let newResturant = await new Resturant(resturant)
-  // console.log(newResturant)
+  resturant.image = {
+      url : req.file.path,
+      filename : req.file.originalname
+  };
+  
+  let newResturant = new Resturant(resturant)
   newResturant = await newResturant.save()
   console.log(newResturant)
   
-  if(items.length > 0)
+  if(items)
   {
     for(let item of items)
     {
@@ -358,11 +363,12 @@ app.get("/getuser", ((req, res)=>{
 }))
 
 
-app.use("/test", (req, res)=>{
+app.get("/test", (req, res)=>{
   res.render("test.ejs")
 })
 
-app.post("/test", upload.single("resturant[image]"), (req, res)=>{
+app.post("/test", upload.single("image"), (req, res)=>{
+  console.log("inside testr")
   console.log(req.file)
   res.redirect("/")
 })

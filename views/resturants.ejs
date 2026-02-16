@@ -55,18 +55,18 @@
            <% for( let resturant of resturants) { %>
                 <div class="col-md-4 mb-4">
                     <div class="card restaurant-card shadow-sm">
-                        <img src="https://images.unsplash.com/photo-1555992336-03a23c9b6c9c" class="card-img-top" height="200">
+                        <img src="<%= resturant.image.url %>" alt="<%= resturant.image.filename %>" class="card-img-top" height="200">
                         <div class="card-body">
-                            <h5 class="card-title"><%= resturant.name %></h5>
+                            <h5 class="card-title"><%= resturant.name %>
+                            <% if (resturant.reviews.length == 0) { %>
+                                <strong>(New)</strong>
+                            <% } %>
+                            </h5>
                            
                             <p class="card-text"><%= resturant.location %> 
                                  <% if (resturant.reviews.length != 0) { %>
                                •  ⭐ <%= resturant.rating %></p>
-                            <% } else{ %>
-                                        ⭐
-
-
-                                   <% }  %>
+                            <% } %>
                             <p class="card-text">Category: <%= resturant.Category %></p>
                             <a href="/show/<%= resturant._id %>" class="btn btn-warning w-100">View Details</a>
                         </div>

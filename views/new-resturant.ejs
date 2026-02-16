@@ -18,7 +18,7 @@
 
           <h4 class="fw-bold mb-4 text-center">Create Restaurant</h4>
 
-          <form action="/resturants" method="POST" class="needs-validation" novalidate>
+          <form action="/resturants" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
 
             <!-- Name + Location -->
             <div class="row g-3 mb-3">
@@ -27,11 +27,8 @@
                 <input type="text"
                        class="form-control form-control-sm shadow-sm"
                        name="resturant[name]"
-                       placeholder="Enter restaurant name"
                        required>
-                <div class="invalid-feedback">
-                  Please enter restaurant name.
-                </div>
+                <div class="invalid-feedback">Please enter restaurant name.</div>
               </div>
 
               <div class="col-md-6">
@@ -39,11 +36,8 @@
                 <input type="text"
                        class="form-control form-control-sm shadow-sm"
                        name="resturant[location]"
-                       placeholder="Enter location"
                        required>
-                <div class="invalid-feedback">
-                  Please enter location.
-                </div>
+                <div class="invalid-feedback">Please enter location.</div>
               </div>
             </div>
 
@@ -60,9 +54,7 @@
                 <option>Desserts</option>
                 <option>Beverages</option>
               </select>
-              <div class="invalid-feedback">
-                Please select a category.
-              </div>
+              <div class="invalid-feedback">Please select a category.</div>
             </div>
 
             <!-- Opening + Closing -->
@@ -77,9 +69,6 @@
                     <option value="<%= time %>"><%= time %></option>
                   <% } %>
                 </select>
-                <div class="invalid-feedback">
-                  Please select opening time.
-                </div>
               </div>
 
               <div class="col-md-6">
@@ -92,9 +81,6 @@
                     <option value="<%= time %>"><%= time %></option>
                   <% } %>
                 </select>
-                <div class="invalid-feedback">
-                  Please select closing time.
-                </div>
               </div>
             </div>
 
@@ -105,11 +91,7 @@
                 <input type="number"
                        class="form-control form-control-sm shadow-sm"
                        name="resturant[startingPrice]"
-                       placeholder="Minimum price"
                        required>
-                <div class="invalid-feedback">
-                  Please enter starting price.
-                </div>
               </div>
 
               <div class="col-md-6">
@@ -117,11 +99,7 @@
                 <input type="number"
                        class="form-control form-control-sm shadow-sm"
                        name="resturant[endingPrice]"
-                       placeholder="Maximum price"
                        required>
-                <div class="invalid-feedback">
-                  Please enter ending price.
-                </div>
               </div>
             </div>
 
@@ -131,10 +109,31 @@
               <textarea class="form-control form-control-sm shadow-sm"
                         rows="3"
                         name="resturant[description]"
-                        placeholder="Write short description..."
                         required></textarea>
-              <div class="invalid-feedback">
-                Please enter description.
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Restaurant Images</label>
+
+              <div id="imageContainer">
+
+                <!-- Default Image Input -->
+                <div class="position-relative mb-3" id="image-0">
+                  <input type="file"
+                         name="images"
+                         class="form-control form-control-sm shadow-sm"
+                         accept="image/*"
+                         required>
+                </div>
+
+              </div>
+
+              <div class="text-end mt-2">
+                <button type="button"
+                        class="btn btn-sm btn-outline-dark shadow-sm"
+                        onclick="addImageInput()">
+                  + Add Image
+                </button>
               </div>
             </div>
 
@@ -171,7 +170,36 @@
 
 <script>
 let itemIndex = 0;
+let imageIndex = 1; // starts from 1 because 0 already exists
 
+function addImageInput() {
+  const container = document.getElementById("imageContainer");
+
+  const html = `
+    <div class="position-relative mb-3" id="image-${imageIndex}">
+      <input type="file"
+             name="images"
+             class="form-control form-control-sm shadow-sm"
+             accept="image/*"
+             required>
+
+      <button type="button"
+              class="btn-close position-absolute top-50 end-0 translate-middle-y me-2"
+              onclick="removeImageInput(${imageIndex})">
+      </button>
+    </div>
+  `;
+
+  container.insertAdjacentHTML("beforeend", html);
+  imageIndex++;
+}
+
+function removeImageInput(index) {
+  const element = document.getElementById(`image-${index}`);
+  if (element) element.remove();
+}
+
+/* Items */
 function addItem() {
   const container = document.getElementById("itemsContainer");
 
@@ -183,17 +211,12 @@ function addItem() {
       </button>
 
       <div class="row g-3 mt-2">
-
         <div class="col-md-6">
           <label class="form-label">Item Name</label>
           <input type="text"
                  class="form-control form-control-sm shadow-sm"
                  name="items[${itemIndex}][name]"
-                 placeholder="Enter item name"
                  required>
-          <div class="invalid-feedback">
-            Please enter item name.
-          </div>
         </div>
 
         <div class="col-md-6">
@@ -201,11 +224,7 @@ function addItem() {
           <input type="number"
                  class="form-control form-control-sm shadow-sm"
                  name="items[${itemIndex}][price]"
-                 placeholder="Enter price"
                  required>
-          <div class="invalid-feedback">
-            Please enter item price.
-          </div>
         </div>
 
         <div class="col-12">
@@ -213,25 +232,16 @@ function addItem() {
           <input type="text"
                  class="form-control form-control-sm shadow-sm"
                  name="items[${itemIndex}][description]"
-                 placeholder="Short item description"
                  required>
-          <div class="invalid-feedback">
-            Please enter item description.
-          </div>
         </div>
 
         <div class="col-12">
           <label class="form-label">Image URL</label>
-          <input type="text"
+          <input type="file"
                  class="form-control form-control-sm shadow-sm"
                  name="items[${itemIndex}][image]"
-                 placeholder="Paste image link"
                  required>
-          <div class="invalid-feedback">
-            Please enter image URL.
-          </div>
         </div>
-
       </div>
     </div>
   `;
@@ -245,7 +255,7 @@ function removeItem(index) {
   if (item) item.remove();
 }
 
-/* Bootstrap Validation Script */
+/* Bootstrap Validation */
 (() => {
   'use strict';
   const forms = document.querySelectorAll('.needs-validation');

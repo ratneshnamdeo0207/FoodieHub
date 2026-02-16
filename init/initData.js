@@ -26,7 +26,11 @@ main()
     await Item.deleteMany({})
 // ObjectId('698f14a9b1433c495119b388'),
 
-    let user = await User.findById("698f14a9b1433c495119b388")
+    const user = await User.findById("6992dbb01e590df67d7cc887");
+    if (!user) {
+      console.error("User not found. Please create the user first.");
+      return;
+    }
 
     let temp = 0, temp1 = 0;
     for(let i = 0;i < 5;i++)
