@@ -5,7 +5,10 @@ const itemSchema = new Schema({
     name: String,
     price: Number,
     description: String,
-    image: String,
+    image: {
+        url: String,
+        filename: String
+    },
     resturant:{
         type: Schema.Types.ObjectId,
         ref: "Resturant",

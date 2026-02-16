@@ -108,12 +108,16 @@ app.get("/show/:id", asyncWrap(async (req, res)=>{
     res.render("show.ejs",  { rest, items})
 }))
 
-app.post("/show/:id/item", isLogIn, isOwner, asyncWrap(async(req, res)=>{
+app.post("/show/:id/item", isLogIn, isOwner, upload.single("image") ,asyncWrap(async(req, res)=>{
     let id = req.params.id
     let item = req.body.item
     let resturant = await Resturant.findById(id)
     let newItem = new Item(item)
     newItem.resturant = resturant
+    newItem.image = {
+      url : req.file.path,
+      filename : req.file.originalname
+    };  
     newItem = await newItem.save()
     console.log(newItem)
 

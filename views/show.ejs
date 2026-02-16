@@ -8,14 +8,23 @@
 
       <!-- Image -->
       <div class="col-md-6">
-          <img 
-          src="<%= rest.image.url %>" 
-          alt="<%= rest.image.filename %>"
-          class="img-fluid h-100 w-100 object-fit-cover"
-          style="min-height: 350px;"
-          alt="Restaurant Image"
-        >
-      </div>
+  <div style="
+        height: 450px;
+        overflow: hidden;
+        border-radius: 20px 0 0 20px;
+      ">
+    <img 
+      src="<%= rest.image.url %>" 
+      alt="<%= rest.image.filename %>"
+      style="
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      ">
+  </div>
+</div>
+
 
       <!-- Details -->
       <div class="col-md-6 p-4 p-lg-5">
@@ -100,55 +109,86 @@
 
         <h5 class="mb-4 fw-bold">Add New Menu Item</h5>
 
-        <form action="/show/<%= rest._id %>/item" method="POST">
+<form action="/show/<%= rest._id %>/item"
+      method="POST"
+      enctype="multipart/form-data">
 
-          <div class="row">
+  <div class="row">
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-semibold">Item Name</label>
-              <input type="text"
-                     name="item[name]"
-                     class="form-control rounded-3"
-                     placeholder="Enter item name"
-                     required>
-            </div>
+    <!-- Item Name -->
+    <div class="col-md-6 mb-3">
+      <label class="form-label fw-semibold">Item Name</label>
+      <input type="text"
+             name="item[name]"
+             class="form-control rounded-3"
+             placeholder="Enter item name"
+             required>
+    </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-semibold">Price (₹)</label>
-              <input type="number"
-                     name="item[price]"
-                     class="form-control rounded-3"
-                     placeholder="Enter price"
-                     required>
-            </div>
+    <!-- Price -->
+    <div class="col-md-6 mb-3">
+      <label class="form-label fw-semibold">Price (₹)</label>
+      <input type="number"
+             name="item[price]"
+             class="form-control rounded-3"
+             placeholder="Enter price"
+             required>
+    </div>
 
-            <div class="col-12 mb-3">
-              <label class="form-label fw-semibold">Image URL</label>
-              <input type="text"
-                     name="item[image]"
-                     class="form-control rounded-3"
-                     placeholder="Paste image URL"
-                     required>
-            </div>
+    <!-- Description -->
+    <div class="col-12 mb-3">
+      <label class="form-label fw-semibold">Description</label>
+      <textarea name="item[description]"
+                class="form-control rounded-3"
+                rows="3"
+                placeholder="Write short description"
+                required></textarea>
+    </div>
 
-            <div class="col-12 mb-3">
-              <label class="form-label fw-semibold">Description</label>
-              <textarea name="item[description]"
-                        class="form-control rounded-3"
-                        rows="3"
-                        placeholder="Write short description"
-                        required></textarea>
-            </div>
+    <!-- Image Upload Section -->
+    <div class="col-12 mb-3">
 
-          </div>
+      <label class="form-label fw-semibold">Upload Images</label>
 
-          <div class="text-end">
-            <button class="btn btn-success rounded-pill px-4">
-              Save Item
-            </button>
-          </div>
+      <div id="imageContainer">
 
-        </form>
+        <div class="input-group mb-2 image-input">
+          <input type="file"
+                 name="image"
+                 class="form-control"
+                 accept="image/*"
+                 required>
+
+          <!-- <button type="button"
+                  class="btn btn-outline-danger"
+                  onclick="removeImage(this)">
+            ✕
+          </button> -->
+        </div>
+
+      </div>
+
+      <!-- Add Image Button (Left Side) -->
+      <!-- <div class="text-start mt-2">
+        <button type="button"
+                class="btn btn-outline-dark rounded-pill px-4"
+                onclick="addImageField()">
+          + Add Image
+        </button>
+      </div> -->
+
+    </div>
+
+  </div>
+
+  <div class="text-end">
+    <button class="btn btn-success rounded-pill px-4">
+      Save Item
+    </button>
+  </div>
+
+</form>
+
 
       </div>
     </div>
@@ -168,10 +208,10 @@
             <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
 
               <img 
-                src="<%= item.image %>"
+                src="<%= item.image.url %>"
                 class="card-img-top"
                 style="height: 220px; object-fit: cover;"
-                alt="<%= item.name %>"
+                alt="<%= item.image.filename %>"
               >
 
               <div class="card-body p-4 d-flex flex-column">
@@ -187,13 +227,33 @@
                 <p class="text-muted small flex-grow-1">
                   <%= item.description %>
                 </p>
+<div class="d-flex gap-2 mt-2">
 
+      <a href="?editId=<%= item._id %>"
+         class="btn btn-sm btn-outline-primary rounded-pill">
+        Edit
+      </a>
+
+      <form action="/items/<%= item._id %>?_method=DELETE"
+            method="POST"
+            class="d-inline">
+        <button class="btn btn-sm btn-outline-danger rounded-pill">
+          Delete
+        </button>
+      </form>
+
+    </div>
                 <button class="btn btn-dark rounded-pill mt-3">
                   Add to Cart
                 </button>
 
               </div>
             </div>
+
+
+
+
+            
           </div>
 
         <% } %>
@@ -256,7 +316,9 @@
 
   <!-- ===== Reviews Section ===== -->
   <div class="mt-5">
+    <% if (rest.reviews && rest.reviews.length > 0) { %>
     <h4 class="mb-4">Customer Reviews</h4>
+<% } %>
 
     <div class="row g-4">
   <% for(let r of rest.reviews){ %>
