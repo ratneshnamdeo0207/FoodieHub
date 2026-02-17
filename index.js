@@ -119,7 +119,7 @@ app.post("/show/:id/item", isLogIn, isOwner, upload.single("image") ,asyncWrap(a
       filename : req.file.originalname
     };  
     newItem = await newItem.save()
-    console.log(newItem)
+    // console.log(newItem)
 
     res.redirect(`/show/${id}`)
 
@@ -338,14 +338,42 @@ app.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
   })
   app.delete("/show/:id", isLogIn, isOwner, async (req, res)=>{
     let id = req.params.id;
-   console.log(id)
+  //  console.log(id)
    await Resturant.findByIdAndDelete(id)
     req.flash("success", "Resturant deleted successfully")
     res.redirect(`/resturants`)
 
   })
 
+  app.put("/show/:id/items/:itemId", asyncWrap(async(req, res)=>{
+    let {id, itemId} = req.params
+    // console.log(id)
+    // console.log(itemId)
+    // console.log(req.body.item)
+       
+    let item = await Item.findOneAndUpdate({_id: itemId}, req.body.item, {returnDocument: "after", runValidator: true})
 
+    console.log(item)
+    
+    res.redirect(`/show/${id}`)
+  }))
+  app.delete("/show/:id/items/:itemId",  asyncWrap(async(req, res)=>{
+    let {id, itemId} = req.params
+    // console.log(id)
+    // console.log(itemId)
+    // console.log(req.body.item)
+
+       
+     await Item.findByIdAndDelete(itemId)
+    
+    res.redirect(`/show/${id}`)
+  }))
+
+  app.get("/showItems", asyncWrap(async (req, res)=>{
+    let items = await Item.find({})
+    console.log(items)
+    res.render("showItems.ejs", {items})
+  }))
   
    
   

@@ -415,3 +415,8 @@
         .navbar-search .form-control:invalid {
           border-color: #dc3545;
         }
+
+/* item ke andar ki description ki height */
+        .desc-height {
+          height: 80px;
+        }
