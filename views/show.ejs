@@ -237,6 +237,9 @@
                 <div id="normal-<%= item.id %>">
                   <div class="d-flex gap-2">
 
+               <% if (currUser && currUser.id == rest.owner.id) { %>
+
+
                     <!-- Edit Button -->
                     <button 
                       class="btn btn-sm btn-outline-primary rounded-pill"
@@ -254,7 +257,7 @@
                         Delete
                       </button>
                     </form>
-
+            <% }  %>
                   </div>
                 </div>
 

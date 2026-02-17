@@ -49,23 +49,15 @@
               <div class="mt-auto d-flex gap-2">
 
                 <a href="/show/<%= item.resturant %>"
-                   class="btn btn-outline-primary btn-sm rounded-pill">
+                   class="btn btn-primary btn-sm rounded-pill">
                  View Resturant
                 </a>
-
-                <a href="/items/<%= item._id %>/edit"
-                   class="btn btn-outline-secondary btn-sm rounded-pill">
-                  Edit
+                
+                 <a href="/show/<%= item.resturant %>"
+                   class="btn btn-danger btn-sm rounded-pill">
+                 Order Me
                 </a>
-
-                <form action="/items/<%= item._id %>?_method=DELETE"
-                      method="POST">
-                  <button class="btn btn-outline-danger btn-sm rounded-pill">
-                    Delete
-                  </button>
-                </form>
-
-              </div>
+            </div>
 
             </div>
           </div>

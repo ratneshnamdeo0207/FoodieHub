@@ -23,6 +23,10 @@ const Review = require("./models/review.js")
 const Item = require("./models/items.js")
 const User = require("./models/users.js")
 
+const resturantRouter = require("./routes/resturantRouter.js")
+const showRouter = require("./routes/showRouter.js")
+const reviewRouter = require("./routes/reviewRouter.js")
+
 app.set("views", path.join(__dirname, "views"))
 app.engine('ejs', engine);
 app.set("view engine", "ejs")
@@ -63,10 +67,7 @@ app.use((req, res, next)=>{
   next();
 })
 
-let port = 4000
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+
 
 async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/FoodieHub');
@@ -83,87 +84,65 @@ app.get("/", (req, res)=>{
     res.render("home")
 })
 
-app.get("/resturants", asyncWrap(async (req, res)=>{
-    let resturants = await Resturant.find({});
-    // console.log(resturants)
-    category = "all"
-    rating = "all"
-    res.render("resturants.ejs", {resturants, category, rating})
-}))
+app.use("/resturants", resturantRouter)
+app.use("/show/:id", showRouter)
+app.use("show/:id/review", reviewRouter)
 
-app.get("/show/:id", asyncWrap(async (req, res)=>{
-    let id = req.params.id;
-    // console.log(id)
-    // resturant - owner (ref)
-    //           - reviews (array of ref) - author (ref) - ref
-    let rest = await Resturant
-    .findById(id)
-    .populate("owner")
-    .populate({path: "reviews", populate: {path: "author"}});
-   
-    // console.log(rest)
-    let items = await Item.find({resturant: id})
-    // console.log(items)
-    // console.log(rest)
-    res.render("show.ejs",  { rest, items})
-}))
 
-app.post("/show/:id/item", isLogIn, isOwner, upload.single("image") ,asyncWrap(async(req, res)=>{
-    let id = req.params.id
-    let item = req.body.item
-    let resturant = await Resturant.findById(id)
-    let newItem = new Item(item)
-    newItem.resturant = resturant
-    newItem.image = {
-      url : req.file.path,
-      filename : req.file.originalname
-    };  
-    newItem = await newItem.save()
-    // console.log(newItem)
 
-    res.redirect(`/show/${id}`)
-
-}))
-
-app.get("/resturant/new", (req, res)=>{
-  res.render("new-resturant.ejs")
-})
-
-app.post("/resturants",isLogIn, upload.single("images"), asyncWrap(async(req, res)=>{
-  let resturant = req.body.resturant
-  let items = req.body.items
-  console.log("inside route")
-  console.log(req.file)
-  // console.log(resturant)
-  // console.log(items)
-  resturant.rating = 0;
-  resturant.owner = req.user;
-  resturant.image = {
-      url : req.file.path,
-      filename : req.file.originalname
-  };
+    
+    app.post("/show/:id/item", isLogIn, isOwner, upload.single("image") ,asyncWrap(async(req, res)=>{
+        let id = req.params.id
+        let item = req.body.item
+        let resturant = await Resturant.findById(id)
+        let newItem = new Item(item)
+        newItem.resturant = resturant
+        newItem.image = {
+          url : req.file.path,
+          filename : req.file.originalname
+        };  
+        newItem = await newItem.save()
+        // console.log(newItem)
+    
+        res.redirect(`/show/${id}`)
+    
+    }))
+    
+    app.put("/show/:id/items/:itemId", asyncWrap(async(req, res)=>{
+      let {id, itemId} = req.params
+      // console.log(id)
+  // console.log(itemId)
+  // console.log(req.body.item)
   
-  let newResturant = new Resturant(resturant)
-  newResturant = await newResturant.save()
-  console.log(newResturant)
+  let item = await Item.findOneAndUpdate({_id: itemId}, req.body.item, {returnDocument: "after", runValidator: true})
   
-  if(items)
-  {
-    for(let item of items)
-    {
-      let newItem = new Item(item)
-      newItem.resturant = newResturant
-      await newItem.save()
-      console.log(item)
+  console.log(item)
+  
+  res.redirect(`/show/${id}`)
+}))
+app.delete("/show/:id/items/:itemId",  asyncWrap(async(req, res)=>{
+  let {id, itemId} = req.params
+  // console.log(id)
+  // console.log(itemId)
+  // console.log(req.body.item)
+  
+  
+  await Item.findByIdAndDelete(itemId)
+  
+  res.redirect(`/show/${id}`)
+}))
 
-    }
-  }
 
-  res.redirect("/resturants")
+
+
+app.get("/showItems", asyncWrap(async (req, res)=>{
+  let items = await Item.find({})
+  console.log(items)
+  res.render("showItems.ejs", {items})
 }))
 
 app.get("/filter", asyncWrap(async (req, res)=>{
-    category = req.query.Category
+  category = req.query.Category
     rating = req.query.rating
     // console.log("category:", category)
     // console.log("rating: ",  rating)
@@ -187,66 +166,6 @@ app.get("/search", asyncWrap(async (req, res)=>{
     // console.log(resturants)
     res.render("search.ejs", {location , resturants})
 }))
-
-app.post("/show/:id/review", isLogIn,  asyncWrap(async(req, res)=>{
-  let review = req.body.review;
-  let id = req.params.id;
-  // console.log(id)
-  let resturant = await Resturant.findById(id).populate("reviews")
-
-  let newReview = new Review(review)
-  newReview.author = req.user;
-  resturant.reviews.push(newReview)
- 
-  await newReview.save()
-  // await resturant.save()
-  
-  let avg = 0, total = 0;
-  if(resturant.reviews)
-  {
-    for(let r of resturant.reviews)
-    {
-      total += r.rating
-    }
-  }
-   avg = total/resturant.reviews.length
-  //  console.log(avg)
-   avg = avg.toFixed(1)
-   resturant.rating = avg
-   await resturant.save()
-  //  console.log(resturant)
-  // console.log("REview accepted")
-  req.flash("success", "Thanks! for your review")
-  res.redirect(`/show/${id}`)
-}))
-
-app.put("/show/:id/review/:reviewId",isLogIn, isReviewAuthor ,asyncWrap( async(req, res)=>{
-  let {id, reviewId} = req.params
-  // console.log(id)
-  // console.log(reviewId)
-  let review = req.body.review;
-  // console.log(review)
-  let updatedReview = await Review.findOneAndUpdate({_id : reviewId}, req.body.review, {returnDocument: "after", runValidator: true})
-  // console.log(updatedReview)
-  res.redirect(`/show/${id}`)
-
-}))
-
-app.delete("/show/:id/review/:reviewId",isLogIn, asyncWrap( async(req, res)=>{
-  let {id, reviewId} = req.params
-  // console.log(id)
-  // console.log(reviewId)
-  // whenever we try to delete a review then first we must make sure that its ref must be removed from the array of reviews that is stored inside the resturant and for doing that we use pull operate to remove the ref from the array of review that is stored inside the resturant
-  let resturant = await Resturant.findByIdAndUpdate(id, {$pull :{ reviews: reviewId}})
-
-  await Review.findByIdAndDelete(reviewId)
-
-  // console.log("Review Deleted Successfully")
-  req.flash("success", "Review Deleted Successfully")
-  res.redirect(`/show/${id}`)
-
-}))
-
 app.get("/signup", isLogged, saveReturnTo, (req, res)=>{ 
   
   res.render("signup.ejs")
@@ -316,64 +235,6 @@ app.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
           res.redirect(redirectUrl);
   })})
 
-  app.get("/show/:id/edit", isLogIn, async (req, res) => {
-    let id = req.params.id;
-    // console.log(id)
-    let rest = await Resturant.findById(id)
-    // console.log(rest)
-    res.render("edit.ejs", {rest});
-  })
-
-  app.put("/show/:id/edit", async (req, res)=>{
-    let resturant = req.body.resturant;
-    // console.log(resturant)
-    let id = req.params.id;
-    // console.log(id)
-    let rest = await Resturant.findById(id)
-    let updatedResturant = await Resturant.findOneAndUpdate({_id: id}, req.body.resturant, {returnDocument: "after", runValidator: true})
-    // console.log(updatedResturant)
-    // console.log("Updation Successful")
-    res.redirect(`/show/${id}`)
-
-  })
-  app.delete("/show/:id", isLogIn, isOwner, async (req, res)=>{
-    let id = req.params.id;
-  //  console.log(id)
-   await Resturant.findByIdAndDelete(id)
-    req.flash("success", "Resturant deleted successfully")
-    res.redirect(`/resturants`)
-
-  })
-
-  app.put("/show/:id/items/:itemId", asyncWrap(async(req, res)=>{
-    let {id, itemId} = req.params
-    // console.log(id)
-    // console.log(itemId)
-    // console.log(req.body.item)
-       
-    let item = await Item.findOneAndUpdate({_id: itemId}, req.body.item, {returnDocument: "after", runValidator: true})
-
-    console.log(item)
-    
-    res.redirect(`/show/${id}`)
-  }))
-  app.delete("/show/:id/items/:itemId",  asyncWrap(async(req, res)=>{
-    let {id, itemId} = req.params
-    // console.log(id)
-    // console.log(itemId)
-    // console.log(req.body.item)
-
-       
-     await Item.findByIdAndDelete(itemId)
-    
-    res.redirect(`/show/${id}`)
-  }))
-
-  app.get("/showItems", asyncWrap(async (req, res)=>{
-    let items = await Item.find({})
-    console.log(items)
-    res.render("showItems.ejs", {items})
-  }))
   
    
   
@@ -409,3 +270,8 @@ app.use((err, req, res, next)=>{
     console.log("error")
     res.render("error.ejs", {status, message})
 })
+
+let port = 4000
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
