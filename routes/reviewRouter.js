@@ -2,6 +2,12 @@ const express = require("express")
 // Router = express.Router()
 const Router = express.Router({ mergeParams: true });
 
+let asyncWrap = require("../utils/asyncWrap.js")
+const Resturant = require("../models/Resturant.js")
+const Review = require("../models/review.js")
+
+let { isLogIn, isOwner, isReviewAuthor } = require("../middleware.js")
+
 Router.route("/")
     .post( isLogIn,  asyncWrap(async(req, res)=>{
       let review = req.body.review;
@@ -47,7 +53,7 @@ Router.route("/:reviewId")
           
         }))
 
-        .delete("/",isLogIn, asyncWrap( async(req, res)=>{
+Router.delete("/:reviewId",isLogIn, asyncWrap( async(req, res)=>{
               let {id, reviewId} = req.params
               // console.log(id)
               // console.log(reviewId)
@@ -61,5 +67,6 @@ Router.route("/:reviewId")
               res.redirect(`/show/${id}`)
               
             }))
+            module.exports = Router
 
     

@@ -1,79 +1,93 @@
 let resturants = [
   {
     name: "Spice Villa",
-    location: "Jabalpur",
-    description: "Authentic North Indian cuisine with rich spices.",
+    location: "Bhopal",
+    description: "Authentic North Indian cuisine with rich traditional flavors.",
     openingHour: "10:00 AM",
     closingHour: "11:00 PM",
     startingPrice: 150,
-    endingPrice: 600,
+    endingPrice: 1200,
     Category: "North Indian",
-    rating: 4.5,
-    image: {
-      url: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-      filename: "spice-villa"
-    }
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1604908554027-5f0e7bba6e0f",
+        filename: "north-indian-1"
+      },
+      {
+        url: "https://images.unsplash.com/photo-1600628422019-7a1d8c7f4b89",
+        filename: "north-indian-2"
+      }
+    ]
   },
-  {
-    name: "Dosa Junction",
-    location: "Indore",
-    description: "Traditional South Indian restaurant serving fresh dosas.",
-    openingHour: "8:00 AM",
-    closingHour: "10:00 PM",
-    startingPrice: 80,
-    endingPrice: 350,
-    Category: "South Indian",
-    rating: 4,
-    image: {
-      url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0",
-      filename: "dosa-junction"
-    }
-  },
+
   {
     name: "Dragon Bowl",
-    location: "Bhopal",
-    description: "Modern Chinese restaurant with vibrant flavors.",
+    location: "Indore",
+    description: "Serving delicious Chinese and Asian specialties.",
     openingHour: "11:00 AM",
-    closingHour: "11:30 PM",
-    startingPrice: 120,
-    endingPrice: 700,
+    closingHour: "10:30 PM",
+    startingPrice: 200,
+    endingPrice: 1500,
     Category: "Chinese",
-    rating: 4.5,
-    image: {
-      url: "https://images.unsplash.com/photo-1563245372-f21724e3856d",
-      filename: "dragon-bowl"
-    }
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1604908177522-040f0d9b1b1b",
+        filename: "chinese-1"
+      }
+    ]
   },
+
   {
-    name: "Burger Hub",
-    location: "Delhi",
-    description: "Fast food corner famous for burgers and fries.",
-    openingHour: "9:00 AM",
-    closingHour: "12:00 AM",
-    startingPrice: 100,
-    endingPrice: 500,
+    name: "Fast Feast",
+    location: "Jabalpur",
+    description: "Best fast food destination for burgers and pizzas.",
+    openingHour: "09:00 AM",
+    closingHour: "10:00 PM",
+    startingPrice: 99,
+    endingPrice: 899,
     Category: "Fast Food",
-    rating: 3,
-    image: {
-      url: "https://images.unsplash.com/photo-1550547660-d9450f859349",
-      filename: "burger-hub"
-    }
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1550547660-d9450f859349",
+        filename: "fastfood-1"
+      }
+    ]
   },
+
   {
     name: "Sweet Cravings",
-    location: "Mumbai",
-    description: "Dessert paradise with premium sweets and ice creams.",
-    openingHour: "10:00 AM",
-    closingHour: "10:30 PM",
-    startingPrice: 90,
-    endingPrice: 400,
+    location: "Delhi",
+    description: "Fresh bakery items and mouth-watering desserts.",
+    openingHour: "08:00 AM",
+    closingHour: "09:00 PM",
+    startingPrice: 120,
+    endingPrice: 1000,
     Category: "Desserts",
-    rating: 5,
-    image: {
-      url: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e",
-      filename: "sweet-cravings"
-    }
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1551024506-0bccd828d307",
+        filename: "dessert-1"
+      }
+    ]
+  },
+
+  {
+    name: "Dosa Delight",
+    location: "Chennai",
+    description: "Traditional South Indian dishes with authentic taste.",
+    openingHour: "07:00 AM",
+    closingHour: "10:00 PM",
+    startingPrice: 80,
+    endingPrice: 700,
+    Category: "South Indian",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1589302168068-964664d93dc0",
+        filename: "south-indian-1"
+      }
+    ]
   }
-];
+]
+
 
 module.exports = resturants;

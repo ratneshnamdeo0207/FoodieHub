@@ -86,7 +86,7 @@ app.get("/", (req, res)=>{
 
 app.use("/resturants", resturantRouter)
 app.use("/show/:id", showRouter)
-app.use("show/:id/review", reviewRouter)
+app.use("/show/:id/review", reviewRouter)
 
 
 

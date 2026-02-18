@@ -22,40 +22,48 @@ Router.route("/")
         rating = "all"
         res.render("resturants.ejs", {resturants, category, rating})
     }))
-    .post(isLogIn, upload.single("images"), asyncWrap(async(req, res)=>{
+    .post(isLogIn, upload.fields([{name: "images", maxCount:10}, {name: "itemImage", maxCount: 1}]), asyncWrap(async(req, res)=>{
         let resturant = req.body.resturant
-        let items = req.body.items
+        let item = req.body.item
         console.log("inside route")
-        console.log(req.file)
+        // console.log(req.file)
         // console.log(resturant)
         // console.log(items)
         resturant.rating = 0;
         resturant.owner = req.user;
-        resturant.image = {
-            url : req.file.path,
-            filename : req.file.originalname
-        };
+        resturant.images = []
+        for(let file of req.files.images){
+
+            let image = {
+                url : file.path,
+                filename : file.originalname
+            };
+            resturant.images.push(image)
+        }
         
         let newResturant = new Resturant(resturant)
         newResturant = await newResturant.save()
         console.log(newResturant)
         
-        if(items)
+        if(item && req.files.itemImage)
         {
-            for(let item of items)
-            {
+           
             let newItem = new Item(item)
             newItem.resturant = newResturant
+            newItem.image = {
+                url : req.files.itemImage[0].path,
+                filename : req.files.itemImage[0].originalname
+            };
             await newItem.save()
             console.log(item)
 
-            }
+            
         }
 
         res.redirect("/resturants")
     }))
 
-Router.get("/new", (req, res)=>{
+Router.get("/new", isLogIn, (req, res)=>{
         res.render("new-resturant.ejs")
     })
 

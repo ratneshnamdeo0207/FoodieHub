@@ -55,7 +55,7 @@
            <% for( let resturant of resturants) { %>
                 <div class="col-md-4 mb-4">
                     <div class="card restaurant-card shadow-sm">
-                        <img src="<%= resturant.image.url %>" alt="<%= resturant.image.filename %>" class="card-img-top" height="200">
+                        <img src="<%= resturant.images[0].url %>" alt="<%= resturant.images[0].filename %>" class="card-img-top" height="200">
                         <div class="card-body">
                             <h5 class="card-title"><%= resturant.name %>
                             <% if (resturant.reviews.length == 0) { %>

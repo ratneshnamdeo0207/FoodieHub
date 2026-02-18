@@ -112,12 +112,11 @@
                         required></textarea>
             </div>
 
+            <!-- Restaurant Images -->
             <div class="mb-4">
               <label class="form-label fw-semibold">Restaurant Images</label>
 
               <div id="imageContainer">
-
-                <!-- Default Image Input -->
                 <div class="position-relative mb-3" id="image-0">
                   <input type="file"
                          name="images"
@@ -125,7 +124,6 @@
                          accept="image/*"
                          required>
                 </div>
-
               </div>
 
               <div class="text-end mt-2">
@@ -137,19 +135,58 @@
               </div>
             </div>
 
-            <!-- Items Section -->
+            <!-- ========================= -->
+            <!-- SINGLE ITEM TOGGLE LOGIC -->
+            <!-- ========================= -->
+
             <hr class="mb-3">
 
             <div id="itemsWrapper">
-              <div id="itemsContainer"></div>
 
               <div class="mt-2">
                 <button type="button"
-                        class="btn btn-sm btn-outline-dark shadow-sm"
-                        onclick="addItem()">
+                        id="toggleItemBtn"
+                        class="btn btn-sm btn-outline-dark shadow-sm">
                   + Add Item
                 </button>
               </div>
+
+              <div id="itemFormContainer" class="mt-3" style="display: none;">
+                <div class="border rounded-4 p-3 shadow-sm bg-white">
+
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Item Name</label>
+                      <input type="text"
+                             class="form-control form-control-sm shadow-sm"
+                             name="item[name]">
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label">Price (₹)</label>
+                      <input type="number"
+                             class="form-control form-control-sm shadow-sm"
+                             name="item[price]">
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label">Description</label>
+                      <input type="text"
+                             class="form-control form-control-sm shadow-sm"
+                             name="item[description]">
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label">Image</label>
+                      <input type="file"
+                             class="form-control form-control-sm shadow-sm"
+                             name="itemImage">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
             </div>
 
             <!-- Submit -->
@@ -169,8 +206,7 @@
 </div>
 
 <script>
-let itemIndex = 0;
-let imageIndex = 1; // starts from 1 because 0 already exists
+let imageIndex = 1;
 
 function addImageInput() {
   const container = document.getElementById("imageContainer");
@@ -199,61 +235,25 @@ function removeImageInput(index) {
   if (element) element.remove();
 }
 
-/* Items */
-function addItem() {
-  const container = document.getElementById("itemsContainer");
+/* Single Item Toggle */
+const toggleBtn = document.getElementById("toggleItemBtn");
+const itemForm = document.getElementById("itemFormContainer");
 
-  const html = `
-    <div class="border rounded-4 p-3 mb-3 shadow-sm bg-white position-relative" id="item-${itemIndex}">
-      <button type="button"
-              class="btn-close position-absolute top-0 end-0 m-2"
-              onclick="removeItem(${itemIndex})">
-      </button>
+toggleBtn.addEventListener("click", function () {
+  const isHidden = itemForm.style.display === "none";
 
-      <div class="row g-3 mt-2">
-        <div class="col-md-6">
-          <label class="form-label">Item Name</label>
-          <input type="text"
-                 class="form-control form-control-sm shadow-sm"
-                 name="items[${itemIndex}][name]"
-                 required>
-        </div>
-
-        <div class="col-md-6">
-          <label class="form-label">Price (₹)</label>
-          <input type="number"
-                 class="form-control form-control-sm shadow-sm"
-                 name="items[${itemIndex}][price]"
-                 required>
-        </div>
-
-        <div class="col-12">
-          <label class="form-label">Description</label>
-          <input type="text"
-                 class="form-control form-control-sm shadow-sm"
-                 name="items[${itemIndex}][description]"
-                 required>
-        </div>
-
-        <div class="col-12">
-          <label class="form-label">Image URL</label>
-          <input type="file"
-                 class="form-control form-control-sm shadow-sm"
-                 name="items[${itemIndex}][image]"
-                 required>
-        </div>
-      </div>
-    </div>
-  `;
-
-  container.insertAdjacentHTML("beforeend", html);
-  itemIndex++;
-}
-
-function removeItem(index) {
-  const item = document.getElementById(`item-${index}`);
-  if (item) item.remove();
-}
+  if (isHidden) {
+    itemForm.style.display = "block";
+    toggleBtn.textContent = "Cancel";
+    toggleBtn.classList.remove("btn-outline-dark");
+    toggleBtn.classList.add("btn-outline-danger");
+  } else {
+    itemForm.style.display = "none";
+    toggleBtn.textContent = "+ Add Item";
+    toggleBtn.classList.remove("btn-outline-danger");
+    toggleBtn.classList.add("btn-outline-dark");
+  }
+});
 
 /* Bootstrap Validation */
 (() => {

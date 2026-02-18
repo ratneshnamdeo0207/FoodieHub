@@ -26,7 +26,7 @@ main()
     await Item.deleteMany({})
 // ObjectId('698f14a9b1433c495119b388'),
 
-    const user = await User.findById("6992dbb01e590df67d7cc887");
+    const user = await User.findById("698f14a9b1433c495119b388");
     if (!user) {
       console.error("User not found. Please create the user first.");
       return;
@@ -47,6 +47,7 @@ main()
       let newResturant = new Resturant(resturants[i])
       newResturant.reviews.push(newReview1)
       newResturant.reviews.push(newReview2)
+      newResturant.rating = (newReview1.rating + newReview2.rating)/2
       newResturant.owner = user
 
       await newResturant.save()
