@@ -15,15 +15,15 @@
       ">
    <% if (rest.images.length > 0) { %>
 
-<div id="restaurantCarousel" class="carousel slide" data-bs-ride="carousel">
+<div id="restaurantCarousel" class="carousel slide h-100" data-bs-ride="carousel">
 
   <div class="carousel-inner">
 
     <% rest.images.forEach((img, index) => { %>
       <div class="mt-4 ms-4 carousel-item <%= index === 0 ? 'active' : '' %>">
         <img src="<%= img.url %>" 
-             class="d-block w-100 h-100"
-             style="object-fit: cover;">
+            class="card-img-top img-fluid"
+             style="max-height: 350px; object-fit: cover;">
       </div>
     <% }) %>
 
