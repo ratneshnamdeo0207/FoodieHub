@@ -42,7 +42,12 @@ Router.post("/signup",saveRedirectUrl, upload.single("profileImage"),  async(req
                 filename : req.file.originalname
               }
             }
-    
+            newUser.addresses = []
+            for(let address of req.body.addresses)
+            {
+              newUser.addresses.push(address)
+            }
+            console.log(newUser)
             if (result.score >= 2) { // 0=weak, 4=strong
                 let registeredUser = await User.register(newUser, password);
                 console.log(registeredUser);
