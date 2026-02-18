@@ -14,72 +14,108 @@
     <div class="collapse navbar-collapse" id="mainNavbar">
 
       <!-- Center Links -->
-      <ul class="navbar-nav mx-auto gap-34">
+      <ul class="navbar-nav mx-auto gap-3">
+
         <li class="nav-item">
           <a class="nav-link <%= currentPath === '/' ? 'active fw-bold text-warning' : '' %>" href="/">Home</a>
         </li>
+
         <li class="nav-item">
-          <a class="nav-link <%= currentPath.startsWith('/resturants') ? 'active fw-bold text-warning' : '' %>" href="/resturants">Resturants</a>
+          <a class="nav-link <%= currentPath.startsWith('/resturants') ? 'active fw-bold text-warning' : '' %>" href="/resturants">
+            Resturants
+          </a>
         </li>
+
         <% if (currUser) { %>
           <li class="nav-item">
-            <a class="nav-link <%= currentPath.startsWith('/resturant/new') ? 'active fw-bold text-warning' : '' %>" href="/resturants/new">Add Resturant</a>
+            <a class="nav-link <%= currentPath.startsWith('/resturants/new') ? 'active fw-bold text-warning' : '' %>" href="/resturants/new">
+              Add Resturant
+            </a>
           </li>
         <% } %>
-          <li class="nav-item">
-            <a class="nav-link <%= currentPath.startsWith('/showItems') ? 'active fw-bold text-warning' : '' %>" href="/showItems">Items</a>
-          </li>
-         
+
         <li class="nav-item">
-         <a class="nav-link <%= currentPath === '/offers' ? 'active fw-bold text-warning' : '' %>" href="/offers">Offers</a>
+          <a class="nav-link <%= currentPath.startsWith('/showItems') ? 'active fw-bold text-warning' : '' %>" href="/showItems">
+            Items
+          </a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/offers' ? 'active fw-bold text-warning' : '' %>" href="/offers">
+            Offers
+          </a>
+        </li>
+
       </ul>
 
       <!-- Search Bar -->
-     <form class="d-flex me-1 navbar-search needs-validation"
-      role="search"
-      style="width: 250px;"
-      action="/search"
-      method="get"
-      novalidate>
+      <form class="d-flex align-items-center me-3 needs-validation"
+            role="search"
+            style="max-width: 260px;"
+            action="/search"
+            method="get"
+            novalidate>
 
-  <div class="position-relative w-100">
-    <input name="location"
-           class="form-control rounded-pill"
-           type="search"
-           placeholder="Search by City..."
-           required>
+        <div class="w-100">
+          <input name="location"
+                 class="form-control rounded-pill"
+                 type="search"
+                 placeholder="Search by City..."
+                 required>
+          <div class="invalid-feedback">
+            Please enter a city.
+          </div>
+        </div>
 
-    <div class="invalid-feedback">
-      Please enter a city.
-    </div>
-  </div>
+        <button class="btn btn-warning rounded-pill px-3 ms-2" type="submit">
+          Search
+        </button>
+      </form>
 
-  <button class="btn btn-warning rounded-pill px-3 ms-3" type="submit">
-    Search
-  </button>
+      <!-- Auth Section -->
+      <div class="d-flex align-items-center">
 
-</form>
-
-
-
-
-      <!-- Auth Buttons -->
-      <div class="d-flex gap-2">
         <% if (currUser) { %>
-          <a href="/logout?redirect=<%= currentPath%>" class="btn btn-outline-light rounded-pill px-3">
-          Logout
-        </a>
+
+          <!-- Profile + Username -->
+          <a href="/user/<%= currUser.id %>">
+
+            <div class="d-flex align-items-center">
+
+            <img 
+              src="<%= currUser.profileImage.url %>" 
+              alt="<%= currUser.profileImage.filename %>"
+              class="rounded-circle border border-warning"
+              style="width:42px; height:42px; object-fit:cover;"
+            >
+
+            <span class="text-white fw-semibold ms-2">
+              <%= currUser.username %>
+            </span>
+
+            
+          </a>
+            <a href="/logout" 
+               class="btn btn-danger btn-sm rounded-pill ms-3 px-3">
+               Logout
+            </a>
+
+          </div>
+
         <% } else { %>
-         
-        <a href="/login?redirect=<%= currentPath%>" class="btn btn-outline-light rounded-pill px-3">
-          Login
-        </a>
-        <a href="/signup?redirect=<%= currentPath%>" class="btn btn-warning rounded-pill px-3">
-          Sign Up
-        </a>
+
+          <a href="/login?redirect=<%= currentPath %>" 
+             class="btn btn-outline-light rounded-pill px-3 me-2">
+            Login
+          </a>
+
+          <a href="/signup?redirect=<%= currentPath %>" 
+             class="btn btn-warning rounded-pill px-3">
+            Sign Up
+          </a>
+
         <% } %>
-         
+
       </div>
 
     </div>

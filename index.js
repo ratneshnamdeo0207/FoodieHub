@@ -10,17 +10,11 @@ engine = require('ejs-mate');
 const session = require('express-session')
 const passport = require("passport")
 const LocalStrategy = require("passport-local");
-const passportLocalMongoose = require('passport-local-mongoose');
 const flash = require('connect-flash');
-const zxcvbn = require("zxcvbn");
-
 const multer  = require('multer')
 const {storage} = require("./cloudConfig.js")
-const upload = multer({ storage })
 
-const Resturant = require("./models/Resturant")
-const Review = require("./models/review.js")
-const Item = require("./models/items.js")
+
 const User = require("./models/users.js")
 
 const resturantRouter = require("./routes/resturantRouter.js")
@@ -38,8 +32,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride('_method'))
 
-let asyncWrap = require("./utils/asyncWrap.js")
-let {saveRedirectUrl, saveReturnTo, isLogIn, isLogged, isReviewAuthor, isOwner} = require("./middleware.js")
 
 app.use(session({
   secret: 'keyboard cat',
@@ -81,10 +73,7 @@ main()
   })
   .catch(err => console.log(err));
 
-app.get("/", (req, res)=>{
- 
-    res.render("home")
-})
+
 
 app.use("/resturants", resturantRouter)
 app.use("/show/:id", showRouter)
@@ -96,7 +85,7 @@ app.use("/", userRouter)
 app.use((err, req, res, next)=>{
     let {status = 500, message = "Some error occured"} = err;
     console.log("error")
-    res.render("error.ejs", {status, message})
+    res.render("randoms/error.ejs", {status, message})
 })
 
 let port = 4000

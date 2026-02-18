@@ -20,7 +20,7 @@ Router.route("/")
         // console.log(resturants)
         category = "all"
         rating = "all"
-        res.render("resturants.ejs", {resturants, category, rating})
+        res.render("resturants/resturants.ejs", {resturants, category, rating})
     }))
     .post(isLogIn, upload.fields([{name: "images", maxCount:10}, {name: "itemImage", maxCount: 1}]), asyncWrap(async(req, res)=>{
         let resturant = req.body.resturant
@@ -64,7 +64,7 @@ Router.route("/")
     }))
 
 Router.get("/new", isLogIn, (req, res)=>{
-        res.render("new-resturant.ejs")
+        res.render("resturants/new-resturant.ejs")
     })
 
 module.exports = Router

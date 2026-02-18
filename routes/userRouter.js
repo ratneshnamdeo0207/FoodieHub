@@ -16,12 +16,32 @@ const Resturant = require("../models/Resturant.js")
 const Item = require("../models/items.js")
 const User = require("../models/users.js")
 
-Router.post("/signup",saveRedirectUrl,  async(req, res)=>{
+Router.get("/", (req, res)=>{
+ 
+    res.render("home")
+})
+Router.route("/user/:id")
+  .get(isLogIn, asyncWrap(async(req, res)=>{
+    let id = req.params.id
+    let user = await User.findById(id).select("-password")  //.select("-password") ensures password is NOT fetched.
+
+    res.render("users/user.ejs", {user})
+  }))
+
+Router.post("/signup",saveRedirectUrl, upload.single("profileImage"),  async(req, res)=>{
       try{
-          let {username, password, email} = req.body
+        let user = req.body.user
+        let password = user.password
             // let user = req.body.user
-            let newUser = new User({username: username, email: email})
+            let newUser = new User(user)
             let result = zxcvbn(password);
+            if(req.file)
+            {
+              newUser.profileImage = {
+                  url : req.file.path,
+                filename : req.file.originalname
+              }
+            }
     
             if (result.score >= 2) { // 0=weak, 4=strong
                 let registeredUser = await User.register(newUser, password);
@@ -55,7 +75,7 @@ Router.get("/login", isLogged, saveReturnTo,  (req, res)=>{
     //   req.session.returnTo = req.query.redirect
     //   console.log(req.session.returnTo)
     // }
-    res.render("login.ejs")
+    res.render("users/login.ejs")
     })
 
 Router.post('/login', saveRedirectUrl,   
@@ -70,7 +90,7 @@ Router.post('/login', saveRedirectUrl,
 
 Router.get("/signup", isLogged, saveReturnTo, (req, res)=>{ 
   
-  res.render("signup.ejs")
+  res.render("users/signup.ejs")
 })
 
 Router.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
@@ -89,7 +109,7 @@ Router.get("/search", asyncWrap(async (req, res)=>{
     let location = req.query.location;  
   let resturants = await Resturant.find({location: location});
     // console.log(resturants)
-    res.render("search.ejs", {location , resturants})
+    res.render("randoms/search.ejs", {location , resturants})
 }))
 
 Router.get("/filter", asyncWrap(async (req, res)=>{
@@ -108,7 +128,7 @@ Router.get("/filter", asyncWrap(async (req, res)=>{
   }
 
     // console.log(resturants)
-    res.render("resturants.ejs", {resturants, category, rating})
+    res.render("resturants/resturants.ejs", {resturants, category, rating})
 }))
 
 Router.route("/test")
@@ -118,7 +138,7 @@ Router.route("/test")
         res.redirect("/")
     })
    .get( (req, res)=>{
-        res.render("test.ejs")
+        res.render("randoms/test.ejs")
     }) 
 
 Router.get("/getuser", ((req, res)=>{
@@ -138,7 +158,7 @@ Router.get("/demouser", async(req, res)=>{
 Router.get("/showItems", asyncWrap(async (req, res)=>{
   let items = await Item.find({})
   console.log(items)
-  res.render("showItems.ejs", {items})
+  res.render("items/showItems.ejs", {items})
 }))
 
 Router.get("/session", (req, res)=>{

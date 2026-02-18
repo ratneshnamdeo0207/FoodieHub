@@ -25,7 +25,7 @@ Router.route("/")
         let items = await Item.find({resturant: id})
         // console.log(items)
         // console.log(rest)
-        res.render("show.ejs",  { rest, items})
+        res.render("shows/show.ejs",  { rest, items})
     }))
 Router.delete("/", isLogIn, isOwner, async (req, res)=>{
           let id = req.params.id;
@@ -41,7 +41,7 @@ Router.route("/edit")
       // console.log(id)
       let rest = await Resturant.findById(id)
       // console.log(rest)
-      res.render("edit.ejs", {rest});
+      res.render("shows/edit.ejs", {rest});
     })
     .put(async (req, res)=>{
           let resturant = req.body.resturant;
