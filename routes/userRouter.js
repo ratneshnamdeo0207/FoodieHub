@@ -1,26 +1,15 @@
 const express = require("express")
 // Router = express.Router()
-const passport = require("passport")
 const Router = express.Router({ mergeParams: true });
-const zxcvbn = require("zxcvbn");
-
 let asyncWrap = require("../utils/asyncWrap.js")
+const User = require("../models/users.js")
+let { isLogIn, saveRedirectUrl, saveReturnTo, isLogged} = require("../middleware.js")
 
 const multer  = require('multer')
 const {storage} = require("../cloudConfig.js")
 const upload = multer({ storage })
 
-let { isLogIn, saveRedirectUrl, saveReturnTo, isLogged} = require("../middleware.js")
-
-const Resturant = require("../models/Resturant.js")
-const Item = require("../models/items.js")
-const User = require("../models/users.js")
-
-Router.get("/", (req, res)=>{
- 
-    res.render("home")
-})
-Router.route("/user/:id")
+Router.route("/:id")
   .get(isLogIn, asyncWrap(async(req, res)=>{
     let id = req.params.id
     let user = await User.findById(id).select("-password")  //.select("-password") ensures password is NOT fetched.
@@ -28,147 +17,29 @@ Router.route("/user/:id")
     res.render("users/user.ejs", {user})
   }))
 
-Router.post("/signup",saveRedirectUrl, upload.single("profileImage"),  async(req, res)=>{
-      try{
-        let user = req.body.user
-        let password = user.password
-            // let user = req.body.user
-            let newUser = new User(user)
-            let result = zxcvbn(password);
-            if(req.file)
-            {
-              newUser.profileImage = {
-                  url : req.file.path,
-                filename : req.file.originalname
-              }
-            }
-            newUser.addresses = []
-            for(let address of req.body.addresses)
-            {
-              newUser.addresses.push(address)
-            }
-            console.log(newUser)
-            if (result.score >= 2) { // 0=weak, 4=strong
-                let registeredUser = await User.register(newUser, password);
-                console.log(registeredUser);
-                
-                req.login(registeredUser, (err) => {
-                    if (err) {
-                        return next(err);
-                    }
-                   req.flash("success", "Welcome to FoodieHub")
-                    const redirectUrl = res.locals.redirectUrl || "/";
-                    delete req.session.returnTo;
+  .put(isLogIn, upload.single("profileImage"),asyncWrap(async(req, res)=>{
+    let id = req.params.id
     
-                    res.redirect(redirectUrl);
-                })} 
-                else {
-                console.log("❌ Weak password");
-                req.flash("error", "Weak Password")
-                res.redirect("/signup")
-            }
-      }catch(err)
-      {
-          req.flash("error", err.message)
-          res.redirect("/signup")
-      }})
+    req.body.user.addresses = req.body.addresses;
+    if(req.file)
+    {
+      req.body.user.profileImage = {
+        url : req.file.path,
+        filename : req.file.originalname
+      }
+    }
+      let updatedUser = await User.findOneAndUpdate({_id : id}, req.body.user, {returnDocument: "after", runValidator: true})//.select("-password") ensures password is NOT fetched.
+    console.log(updatedUser)
+    
+    res.render("users/user.ejs", {user : updatedUser})
+  }))
 
-Router.get("/login", isLogged, saveReturnTo,  (req, res)=>{
-    // console.log(req.query.redirect)
-    // if(req.query.redirect)
-    // {
-    //   req.session.returnTo = req.query.redirect
-    //   console.log(req.session.returnTo)
-    // }
-    res.render("users/login.ejs")
-    })
+Router.route("/:id/edit")
+  .get(isLogIn, asyncWrap(async(req, res)=>{
+    let id = req.params.id
+    let user = await User.findById(id).select("-password")  //.select("-password") ensures password is NOT fetched.
 
-Router.post('/login', saveRedirectUrl,   
-  passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),(req, res)=> {
-    req.flash("success", "Login Successful")
-     const redirectUrl = res.locals.redirectUrl || "/";
-     delete req.session.returnTo;
+    res.render("users/edit.ejs", {user})
+  }))
 
-    res.redirect(redirectUrl);
-
-  }); 
-
-Router.get("/signup", isLogged, saveReturnTo, (req, res)=>{ 
-  
-  res.render("users/signup.ejs")
-})
-
-Router.get("/logout",saveReturnTo,  saveRedirectUrl, (req, res, next) => {
-    req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
-        req.flash("success", "You are logged out!!")
-          const redirectUrl = res.locals.redirectUrl || "/";
-          delete req.session.returnTo;
-
-          res.redirect(redirectUrl);
-  })})
-
-Router.get("/search", asyncWrap(async (req, res)=>{
-    let location = req.query.location;  
-  let resturants = await Resturant.find({location: location});
-    // console.log(resturants)
-    res.render("randoms/search.ejs", {location , resturants})
-}))
-
-Router.get("/filter", asyncWrap(async (req, res)=>{
-  category = req.query.Category
-    rating = req.query.rating
-    // console.log("category:", category)
-    // console.log("rating: ",  rating)
-
-    let resturant;
-    // let resturants = await Resturant.find({Category: category});
-    if(category != ""){
-    resturants = await Resturant.find({Category: category, rating : {$gt : rating}});
-  }
-  else{
-     resturants = await Resturant.find({rating : {$gt : rating}});
-  }
-
-    // console.log(resturants)
-    res.render("resturants/resturants.ejs", {resturants, category, rating})
-}))
-
-Router.route("/test")
-    .post( upload.single("image"), (req, res)=>{
-        console.log("inside testr")
-        console.log(req.file)
-        res.redirect("/")
-    })
-   .get( (req, res)=>{
-        res.render("randoms/test.ejs")
-    }) 
-
-Router.get("/getuser", ((req, res)=>{
-  
-  console.log(req.user)
-}))
-
-Router.get("/demouser", async(req, res)=>{
-  let fakeUser = new User({
-    email: "user@gmail.com",
-    username: "demo"
-  })
-  let registeredUser = await User.register(fakeUser, "demo@123")
-  res.send(registeredUser)
-})
-
-Router.get("/showItems", asyncWrap(async (req, res)=>{
-  let items = await Item.find({})
-  console.log(items)
-  res.render("items/showItems.ejs", {items})
-}))
-
-Router.get("/session", (req, res)=>{
-  console.log(req.session)
-})
-
-module.exports = Router
-
+module.exports = Router;

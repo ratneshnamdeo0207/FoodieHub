@@ -1,0 +1,177 @@
+
+<% layout("layouts/boilerplate") %>
+
+
+<body class="bg-light">
+
+<div class="container py-5">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Edit Profile</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form action="/user/<%= user._id %>?_method=PUT" 
+                  method="POST" 
+                  enctype="multipart/form-data"
+                  class="needs-validation" 
+                  novalidate>
+
+                <!-- Username -->
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text"
+                           class="form-control"
+                           name="user[username]"
+                           value="<%= user.username %>"
+                           required>
+                    <div class="invalid-feedback">
+                        Username is required.
+                    </div>
+                </div>
+
+                <!-- Full Name -->
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text"
+                           class="form-control"
+                           name="user[fullName]"
+                           value="<%= user.fullName %>"
+                           required>
+                    <div class="invalid-feedback">
+                        Full name is required.
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email"
+                           class="form-control"
+                           name="user[email]"
+                           value="<%= user.email %>"
+                           required>
+                    <div class="invalid-feedback">
+                        Please enter a valid email.
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text"
+                           class="form-control"
+                           name="user[phone]"
+                           pattern="[0-9]{10}"
+                           value="<%= user.phone %>"
+                           required>
+                    <div class="invalid-feedback">
+                        Enter valid 10 digit phone number.
+                    </div>
+                </div>
+
+                <!-- Role -->
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select name="user[role]" class="form-select" required>
+                        <option value="user" <%= user.role === "user" ? "selected" : "" %>>User</option>
+                        <option value="admin" <%= user.role === "admin" ? "selected" : "" %>>Admin</option>
+                        <option value="restaurantOwner" <%= user.role === "restaurantOwner" ? "selected" : "" %>>Restaurant Owner</option>
+                    </select>
+                </div>
+
+                <!-- Profile Image -->
+                <div class="mb-3">
+                    <label class="form-label">Profile Image</label><br>
+
+                    <% if (user.profileImage && user.profileImage.url) { %>
+                        <img src="<%= user.profileImage.url %>" 
+                             class="img-thumbnail mb-2"
+                             width="120">
+                    <% } %>
+
+                    <input type="file" 
+                           name="profileImage" 
+                           class="form-control">
+                </div>
+
+                <!-- Addresses -->
+                <h5 class="mt-4">Addresses</h5>
+
+                <% user.addresses.forEach((address, index) => { %>
+                    <div class="border rounded p-3 mb-3 bg-light">
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">House No</label>
+                                <input type="text"
+                                       name="addresses[<%= index %>][houseNo]"
+                                       class="form-control"
+                                       value="<%= address.houseNo %>">
+                            </div>
+
+                            <div class="col-md-8">
+                                <label class="form-label">Street</label>
+                                <input type="text"
+                                       name="addresses[<%= index %>][street]"
+                                       class="form-control"
+                                       value="<%= address.street %>">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">City</label>
+                                <input type="text"
+                                       name="addresses[<%= index %>][city]"
+                                       class="form-control"
+                                       value="<%= address.city %>">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">State</label>
+                                <input type="text"
+                                       name="addresses[<%= index %>][state]"
+                                       class="form-control"
+                                       value="<%= address.state %>">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Pincode</label>
+                                <input type="number"
+                                       name="addresses[<%= index %>][pincode]"
+                                       class="form-control"
+                                       value="<%= address.pincode %>">
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="addresses[<%= index %>][isDefault]"
+                                           <%= address.isDefault ? "checked" : "" %>>
+                                    <label class="form-check-label">
+                                        Default Address
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                <% }) %>
+
+                <!-- Submit -->
+                <div class="text-end">
+                    <button class="btn btn-dark px-4">
+                        Update Profile
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

@@ -21,6 +21,7 @@ const resturantRouter = require("./routes/resturantRouter.js")
 const showRouter = require("./routes/showRouter.js")
 const reviewRouter = require("./routes/reviewRouter.js")
 const itemRouter = require("./routes/itemRouter.js")
+const rootRouter = require("./routes/rootRouter.js")
 const userRouter = require("./routes/userRouter.js")
 
 app.set("views", path.join(__dirname, "views"))
@@ -79,7 +80,8 @@ app.use("/resturants", resturantRouter)
 app.use("/show/:id", showRouter)
 app.use("/show/:id/review", reviewRouter)
 app.use("/show/:id/items", itemRouter)
-app.use("/", userRouter)
+app.use("/user", userRouter)
+app.use("/", rootRouter)
 
   
 app.use((err, req, res, next)=>{

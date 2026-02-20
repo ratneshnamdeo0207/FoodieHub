@@ -5,7 +5,7 @@
     <div class="hero-overlay">
         <h1 class="display-4 fw-bold">Discover the Best Restaurants Near You</h1>
         <p class="lead">Find, Review & Share your favorite places</p>
-        <a href="#" class="btn btn-warning btn-lg mt-3">Explore Now</a>
+        <a href="/resturants" class="btn btn-warning btn-lg mt-3">Explore Now</a>
     </div>
     
 </section>
@@ -15,23 +15,26 @@
     <h2 class="text-center mb-4">Browse by Categories</h2>
     <div class="row text-center">
         <div class="col-md-3 mb-3">
+            
             <div class="card category-card p-3 shadow-sm">
-                <h5>🍕 Pizza</h5>
+                <a style="text-decoration: none; color: brown;" href="/filter?Category=North+Indian&rating=0"><h5>North Indian</h5></a>
+            </div>
+        
+        </div>
+            <div class="col-md-3 mb-3">
+            
+             <div class="card category-card p-3 shadow-sm">
+                <a style="text-decoration: none; color: brown;" href="/filter?Category=South+Indian&rating=0"><h5>South Indian</h5></a>
             </div>
         </div>
         <div class="col-md-3 mb-3">
             <div class="card category-card p-3 shadow-sm">
-                <h5>🍔 Fast Food</h5>
+                <a style="text-decoration: none; color: brown;" href="/filter?Category=Chinese&rating=0"><h5>Cafe</h5></a>
             </div>
         </div>
         <div class="col-md-3 mb-3">
             <div class="card category-card p-3 shadow-sm">
-                <h5>☕ Cafe</h5>
-            </div>
-        </div>
-        <div class="col-md-3 mb-3">
-            <div class="card category-card p-3 shadow-sm">
-                <h5>🍛 Indian</h5>
+                 <a style="text-decoration: none; color: brown;" href="/filter?Category=Fast+Food&rating=0"><h5>Indian</h5></a>
             </div>
         </div>
     </div>
@@ -41,17 +44,19 @@
 <section class="container my-5">
     <h2 class="text-center mb-4">Featured Restaurants</h2>
     <div class="row">
-
+        <% for( let resturant of resturants ) { %>
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
-                <img src="https://images.unsplash.com/photo-1555992336-03a23c9b6c9c" class="card-img-top" height="200">
+                <img src="<%= resturant.images[0].url %>" class="card-img-top" height="200">
                 <div class="card-body">
-                    <h5 class="card-title">Spice Garden</h5>
-                    <p class="card-text">Nagpur • ⭐ 4.5</p>
-                    <a href="#" class="btn btn-warning">View</a>
+                    <h5 class="card-title"><%= resturant.name %></h5>
+                    <p class="card-text"><%= resturant.location %></p>
+                    <a href="/show/<%= resturant.id %>" class="btn btn-warning">View Resturant</a>
                 </div>
             </div>
         </div>
+        <% } %>
+        
 
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
