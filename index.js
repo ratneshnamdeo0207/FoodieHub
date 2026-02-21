@@ -65,7 +65,7 @@ app.use((req, res, next)=>{
 
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/FoodieHub');
+  await mongoose.connect(process.env.ATLASDB_URL);
 //   await mongoose.connect(dburl);  
 }
 main()
@@ -82,7 +82,6 @@ app.use("/show/:id/review", reviewRouter)
 app.use("/show/:id/items", itemRouter)
 app.use("/user", userRouter)
 app.use("/", rootRouter)
-
   
 app.use((err, req, res, next)=>{
     let {status = 500, message = "Some error occured"} = err;
