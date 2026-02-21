@@ -7,14 +7,15 @@ const mongoose = require("mongoose")
 const path = require("path")
 const methodOverride = require('method-override')
 engine = require('ejs-mate');
-const session = require('express-session')
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require("passport")
 const LocalStrategy = require("passport-local");
 const flash = require('connect-flash');
 const multer  = require('multer')
 const {storage} = require("./cloudConfig.js")
 
-
+const dburl = process.env.ATLASDB_URL
 const User = require("./models/users.js")
 
 const resturantRouter = require("./routes/resturantRouter.js")
@@ -33,17 +34,31 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride('_method'))
 
+const store = MongoStore.create({
+    mongoUrl: process.env.ATLASDB_URL,
+    touchAfter: 24 * 3600
+});
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie:{
+// const store = MongoStore.create({
+//     mongoUrl: process.env.ATLASDB_URL,
+//     crypto: {
+//         secret: process.env.SECRET
+//     },
+//     touchAfter: 24 * 3600
+// });
+const sessionOptions = {
+    store,
+    secret :process.env.SECRET,
+    resave : false,
+    saveUninitialized : true,
+    cookie:{
         expires: Date.now() + 4 * 24 * 60 * 60 * 1000,
         maxAge: 4 * 24 * 60 * 60 * 1000,
     }
-}))
-// req.user
+}
+
+app.use(session(sessionOptions));
+
 
 
 app.use(passport.initialize());
@@ -65,7 +80,7 @@ app.use((req, res, next)=>{
 
 
 async function main() {
-  await mongoose.connect(process.env.ATLASDB_URL);
+  await mongoose.connect(dburl);
 //   await mongoose.connect(dburl);  
 }
 main()
@@ -83,12 +98,14 @@ app.use("/show/:id/items", itemRouter)
 app.use("/user", userRouter)
 app.use("/", rootRouter)
   
-app.use((err, req, res, next)=>{
-    let {status = 500, message = "Some error occured"} = err;
-    console.log("error")
-    res.render("randoms/error.ejs", {status, message})
-})
-
+app.use((err, req, res, next) => {
+    if (res.headersSent) {
+        return next(err);   // VERY IMPORTANT
+    }
+    let { status = 500, message = "Some error occurred" } = err;
+    console.log(err);
+    res.status(status).render("randoms/error.ejs", { status, message });
+});
 let port = 4000
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

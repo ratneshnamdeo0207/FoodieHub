@@ -1,18 +1,27 @@
 {
   "name": "foodiehub",
   "version": "1.0.0",
-  "description": "",
+  "description": "🚀 **Live Demo:**  \r 👉 [Click Me!!](https://foodiehub-4js2.onrender.com/)",
+  "keywords": [],
+  "homepage": "https://github.com/ratneshnamdeo0207/FoodieHub#readme",
+  "bugs": {
+    "url": "https://github.com/ratneshnamdeo0207/FoodieHub/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ratneshnamdeo0207/FoodieHub.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cloudinary": "^1.41.0",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^4.6.0",
     "dotenv": "^17.3.1",
     "ejs": "^4.0.1",
     "ejs-mate": "^4.0.0",
