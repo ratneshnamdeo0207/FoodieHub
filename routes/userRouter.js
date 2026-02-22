@@ -41,5 +41,15 @@ Router.route("/:id/edit")
 
     res.render("users/edit.ejs", {user})
   }))
+Router.route("/:id/delete")
+  .get(isLogIn, async(req, res)=>{
+
+    let id = req.params.id
+    let user = await User.findById(id).select("-password")
+    res.render("/users/delete", {user})
+  })
+
+
+
 
 module.exports = Router;

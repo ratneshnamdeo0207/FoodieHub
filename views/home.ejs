@@ -44,7 +44,15 @@
 <section class="container my-5">
     <h2 class="text-center mb-4">Featured Restaurants</h2>
     <div class="row">
-        <% for( let resturant of resturants ) { %>
+        <% let x = 0; %>
+        <% for( let resturant of resturants ) { 
+            
+            if(x == 3)
+        {
+            break;
+        }
+        x++;
+            %>
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <img src="<%= resturant.images[0].url %>" class="card-img-top" height="200">
@@ -58,27 +66,6 @@
         <% } %>
         
 
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-                <img src="https://images.unsplash.com/photo-1546069901-eacef0df6022" class="card-img-top" height="200">
-                <div class="card-body">
-                    <h5 class="card-title">Cafe Brew</h5>
-                    <p class="card-text">Mumbai • ⭐ 4.3</p>
-                    <a href="#" class="btn btn-warning">View</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" class="card-img-top" height="200">
-                <div class="card-body">
-                    <h5 class="card-title">Pizza Hub</h5>
-                    <p class="card-text">Delhi • ⭐ 4.7</p>
-                    <a href="#" class="btn btn-warning">View</a>
-                </div>
-            </div>
-        </div>
 
     </div>
 </section>
